@@ -1,0 +1,3 @@
+# Some environment settings for using GTAGS in emacs (with exuberant ctags backend)
+export GTAGSCONF=~/local/share/gtags/gtags.conf
+export GTAGSLABEL=native

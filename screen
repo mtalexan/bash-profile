@@ -1,0 +1,135 @@
+##############################################################################
+# User defined "alias" commands for screen commands
+#
+
+## Function that checks if our display is being forwarded and sets the VISUAL variable
+## to a non-windowed version if it is, or a windowed version if it isn't
+## Not used, everything is forwarded (don't do this right now since it's being used
+## when ssh-ing on-site)
+#function reset_visual_editor()
+#{
+#    LOCAL_DISP=`echo $DISPLAY | grep "localhost"` 
+#    if [ -z $LOCAL_DISP ] ; then
+#        #Do everything with windows normally
+#        window_mode
+#    else
+#        #do everything in no window mode by default
+#        nowindow_mode
+#     fi
+#}
+
+## Saves the DISPLAY and x11 authorizations to files so they can be retrieved after
+## entering a screen session.
+function x11save()
+{
+    id="User1"
+    if [ ! -u $1 ] ; then
+        id="$1"
+    fi
+
+    dispFile="/home/$USER/.echo.$USER.$id"
+    dispFile+="DISPLAY.txt"
+    
+    authFile="/home/$USER/.parse.$USER.$id"
+    authFile+="Xauth.txt"
+
+    # Remember the DISPLAY variable
+    echo $DISPLAY
+    echo $DISPLAY > $dispFile
+    chmod a+r $dispFile
+
+    # Remember our xauth cookie
+
+    #DISPLAY format is "sometext:##.##" where "sometext" is optional and ##'s are any 1 or multi digit numbers
+    #Get the ## from the DISPLAY immediately after the ':' but before the '.'
+    DISP_NUM=`echo $DISPLAY | awk 'BEGIN {FS=":"}; {print $2}' | awk 'BEGIN {FS="."}; {print $1}'`
+    if [ $DISP_NUM != "0" ] ; then
+        xauth list | grep `echo :$DISP_NUM`
+        xauth list | grep `echo :$DISP_NUM` > $authFile
+        chmod a+r $authFile
+    else
+        #clear the authFile if we're on local display
+        echo "" > $authFile
+    fi
+
+}
+
+## Loads the saved DISPLAY and x11 authorizations from x11save() so it can be set
+## to forward graphics when connecting remotely, or to not forward graphics if not
+## connecting remotely.  Also has the side effect of updating the VISUAL variable
+## so the default is either windowed or non-windowed depending on the remote connection.
+function x11load()
+{
+    id="User1"
+    if [ ! -u $1 ] ; then
+        id="$1"
+    fi
+
+    dispFile="/home/$USER/.echo.$USER.$id"
+    dispFile+="DISPLAY.txt"
+
+    authFile="/home/$USER/.parse.$USER.$id"
+    authFile+="Xauth.txt"
+
+# Disable since we clearly don't need to worry about the XAuth
+#    if [ -f $authFile ] ; then
+#        ADD=`cat $authFile`
+#        if [ ! -z "$ADD" ] ; then
+#            echo `cat $authFile`
+#            xauth add `cat $authFile`
+#        else
+#            echo "No saved xauth"
+#        fi
+#    else
+#        echo "No saved xauth"
+#    fi
+
+    if [ -f $dispFile ] ; then
+        ADD=`cat $dispFile`
+        if [ ! -z "$ADD" ] ; then
+            echo `cat $dispFile`
+            export DISPLAY=`cat $dispFile`
+        else
+            echo "No saved DISPLAY"
+        fi
+    else
+        echo "No saved DISPLAY"
+    fi
+
+#    reset_visual_editor
+}
+
+## Function to handle automatically saving the x11 setup when a calling screen
+function screen_remote()
+{
+    # Hide the output from saving the screen setup
+    x11save 1>&2
+    screen $@
+}
+
+#alias screen="screen_remote"
+alias sls="screen -ls "
+
+
+#Always run x11save on login so the details are updated for screen sessions to use
+x11save
+
+## Funtion allowing a new screen to be created with a name that's 
+## used both in the screen's title and as the "socket" name (the name
+## people see when they do screen -ls)
+function new_screen()
+{
+    NAME=
+
+    #goto the location we want to store the screen logs
+    cd ~/screen_logs
+
+    if [ ! -u $1 ]; then
+        #pull the name off the arg list, but keep the rest of the args
+        NAME=$1
+        shift
+        screen -t $NAME -S $NAME $@   
+    else
+        screen $@
+    fi
+}

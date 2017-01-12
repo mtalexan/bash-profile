@@ -1,0 +1,37 @@
+# used by Emacs
+#export TMPDIR="/home/${USER}/.emacs.d/temp"
+
+##############################################################################
+# User defined "alias" commands for x11 port forwarding when SSHing in, then
+# starting or joining a screen session where x11 port forwarding is wanted
+#
+
+# Function that just swaps most editor values for the no-window equivalent
+function nowindow_mode()
+{
+    export SUDOEDITOR="emacs -nw"
+    export GIT_EDITOR="emacs -nw"
+    export EDITOR="emacs -nw"
+    export VISUAL=
+    #Set all the editors the same, opening in no window mode
+    alias emacss='emacss_startup -c -nw '
+    alias emacsn='emacss_startup -c -nw '
+    alias emacsse='emacss_startup -c -nw '
+}
+
+function window_mode()
+{
+    # we're using this in our sudo alias to make sure we don't try opening a client to our daemon when sudoing
+    export SUDOEDITOR="emacs"
+    export GIT_EDITOR="emacs"
+    export EDITOR="emacs "
+    export VISUAL="emacss "
+    # Server, but acting like normal emacs running in the foreground
+    alias emacss='emacss_startup -c '
+    # Server, running in the background, in a new window
+    alias emacssn='emacss_startup -c -n '
+    # Server, running in the background, in a window that's already open
+    alias emacsse='emacss_startup -n '
+}
+
+window_mode
