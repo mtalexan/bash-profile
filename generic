@@ -1,3 +1,9 @@
+# Basic generic settings.  Includes history size and settings,
+# aliases for colorization, git status in the prompt, and user based process aliasing.
+#
+# Requires git 
+# No arguments
+
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace

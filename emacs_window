@@ -1,5 +1,9 @@
-# used by Emacs
-#export TMPDIR="/home/${USER}/.emacs.d/temp"
+# Emacs functions related to how emacs and the editors are used.
+# Controls whether it opens in no-window mode or not.
+#
+# Requires emacs_daemon for some of the aliases defined to work
+# No arguments
+
 
 ##############################################################################
 # User defined "alias" commands for x11 port forwarding when SSHing in, then

@@ -1,26 +1,36 @@
+# Commands, aliases, variables, and loading of repository selection
+# settings.
+#
+# Depends on the modular-scripts repo
+# Arguments:
+#  LOCAL_REPOS_DIR : The directory the modular-scripts repo was cloned to
+
 # Set some defaults for the RRSDK build stuff
 if [ -u $DEVDIR ] ; then
     export DEVDIR=/home/${USER}/rrsdk_code_repos/base/rrsdk/ksi
 fi
-export MODULAR_REPO_PATH=/home/${USER}/modular_code_repos/base_powers/modular
+export MODULAR_REPO_PATH=/home/${USER}/modular_code_repos/base/modular
 
 # There should be some scripts to restore our last settings, source them
-RRSDK_PATH_SCRIPT=${HOME}/local/repos/set_rrsdk.sh
+RRSDK_PATH_SCRIPT=${LOCAL_REPOS_DIR}/set_rrsdk.sh
 if [ -e $RRSDK_PATH_SCRIPT ] ; then
-    . $RRSDK_PATH_SCRIPT
+    source $RRSDK_PATH_SCRIPT
 fi
 
-MOD_PATH_SCRIPT=${HOME}/local/repos/set_modular.sh
+MOD_PATH_SCRIPT=${LOCAL_REPOS_DIR}/set_modular.sh
 if [ -e $MOD_PATH_SCRIPT ] ; then
-    . $MOD_PATH_SCRIPT
+    source $MOD_PATH_SCRIPT
 fi
 
 # Uncrustify
 export UNCRUSTIFY_CONFIG=${MODULAR_REPO_PATH}/tools/uncrustify.cfg
 
-alias srr='. ~/local/repos/rrsdk_repo_set_script.sh'
-alias smod='. ~/local/repos/modular_repo_set_script.sh'
+alias srr='source ${LOCAL_REPOS_DIR}/rrsdk_repo_set_script.sh'
+alias smod='source ${LOCAL_REPOS_DIR}/modular_repo_set_script.sh'
 
 #defines complex aliases
-source ~/local/bin/rrsdk
-source ~/local/bin/modular
+source ${LOCAL_REPOS_DIR}/rrsdk
+source ${LOCAL_REPOS_DIR}/modular
+
+# The scripts themselves need to know this as well
+export LOCAL_REPOS_DIR

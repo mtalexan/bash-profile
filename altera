@@ -1,3 +1,8 @@
+# Altera aliases and license file setting.
+#
+# Depends on install location and version.
+# No arguments required
+
 # Altera tools
 alias quartus='/opt/altera/12.1/quartus/bin/quartus --64bit '
 alias qpgm='/opt/altera/12.1/quartus/bin/quartus_pgmw '

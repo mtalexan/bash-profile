@@ -1,8 +1,13 @@
+# Git tab-completion and aliases.
+#
+# Arguments:
+#  LOCAL_PROFILES_DIR : The directory the profiles repo is cloned into
+
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_EDITOR=emacs
 
-if [ -f ~/local/profile/git-completion.bash ]; then
-    . ~/local/profile/git-completion.bash
+if [ -f ${LOCAL_PROFILES_DIR}/git-completion.bash ]; then
+    source ${LOCAL_PROFILES_DIR}/git-completion.bash
 
     ##### Git Aliases with completion for each (requires the standard git completion script)
     alias gs='git status '

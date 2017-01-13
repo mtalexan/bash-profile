@@ -1,3 +1,8 @@
+# Aliases and settings for a randomly named emacs server daemon, starting up
+# if none exists, and all future calls connecting to that daemon.
+#
+# Requires no arguments.
+
 ##############################################################################
 # User defined "alias" commands for emacs server auto-startup
 #
