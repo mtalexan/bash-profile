@@ -5,11 +5,11 @@
 # Arguments:
 #  LOCAL_REPOS_DIR : The directory the modular-scripts repo was cloned to
 
-# Set some defaults for the RRSDK build stuff
-if [ -u $DEVDIR ] ; then
-    export DEVDIR=/home/${USER}/rrsdk_code_repos/base/rrsdk/ksi
+# There should be some scripts to restore our last settings, source them
+MSDK_PATH_SCRIPT=${LOCAL_REPOS_DIR}/set_msdk.sh
+if [ -e $MSDK_PATH_SCRIPT ] ; then
+    source $MSDK_PATH_SCRIPT
 fi
-export MODULAR_REPO_PATH=/home/${USER}/modular_code_repos/base/modular
 
 # There should be some scripts to restore our last settings, source them
 RRSDK_PATH_SCRIPT=${LOCAL_REPOS_DIR}/set_rrsdk.sh
@@ -27,10 +27,12 @@ export UNCRUSTIFY_CONFIG=${MODULAR_REPO_PATH}/tools/uncrustify.cfg
 
 alias srr='source ${LOCAL_REPOS_DIR}/rrsdk_repo_set_script.sh'
 alias smod='source ${LOCAL_REPOS_DIR}/modular_repo_set_script.sh'
+alias smsdk='source ${LOCAL_REPOS_DIR}/msdk_repo_set_script.sh'
 
 #defines complex aliases
 source ${LOCAL_REPOS_DIR}/rrsdk
 source ${LOCAL_REPOS_DIR}/modular
+source ${LOCAL_REPOS_DIR}/msdk
 
 # The scripts themselves need to know this as well
 export LOCAL_REPOS_DIR
