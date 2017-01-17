@@ -6,6 +6,16 @@
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_EDITOR=emacs
 
+#some git aliases
+git config --global alias.unstage "reset HEAD --"
+git config --global alias.graph "log --oneline --decorate --graph"
+git config --global alias.co "checkout"
+git config --global alias.cm "commit"
+git config --global alias.bvv "branch -vv"
+git config --global alias.last "log -1 HEAD"
+git config --global alias.update "pull --no-rebase --ff --no-commit --ff-only"
+
+
 if [ -f ${LOCAL_PROFILES_DIR}/git-completion.bash ]; then
     source ${LOCAL_PROFILES_DIR}/git-completion.bash
 
