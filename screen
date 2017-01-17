@@ -56,7 +56,7 @@ function x11save()
     authFile+="Xauth.txt"
 
     # Remember the DISPLAY variable
-    echo $DISPLAY
+    echo $DISPLAY >&2
     echo $DISPLAY > $dispFile
     chmod a+r $dispFile
 
@@ -66,7 +66,7 @@ function x11save()
     #Get the ## from the DISPLAY immediately after the ':' but before the '.'
     DISP_NUM=`echo $DISPLAY | awk 'BEGIN {FS=":"}; {print $2}' | awk 'BEGIN {FS="."}; {print $1}'`
     if [ $DISP_NUM != "0" ] ; then
-        xauth list | grep `echo :$DISP_NUM`
+        xauth list | grep `echo :$DISP_NUM` >&2
         xauth list | grep `echo :$DISP_NUM` > $authFile
         chmod a+r $authFile
     else
