@@ -7,3 +7,4 @@
 # Some environment settings for using GTAGS in emacs (with exuberant ctags backend)
 export GTAGSCONF=${GTAGS_INSTALL_DIR}/share/gtags/gtags.conf
 export GTAGSLABEL=native
+export PATH=${PATH}:${GTAGS_INSTALL_DIR}/bin
