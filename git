@@ -39,7 +39,13 @@ if [ -f ${LOCAL_PROFILES_DIR}/git-completion.bash ]; then
     complete -o bashdefault -o default -o nospace -F _git g
     alias gcm='git commit '
     __git_complete gcm _git_commit
-else
-    #since it's part of the command prompt
-    alias __git_ps1=' '
+fi
+
+if ! command -v __git_ps1 ; then
+    if [ -f ${LOCAL_PROFILES_DIR}/git-prompt.sh ] ; then
+        source ${LOCAL_PROFILES_DIR}/git-prompt.sh
+    else
+        #since it's part of the command prompt
+        alias __git_ps1=' '
+    fi
 fi
