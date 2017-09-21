@@ -5,8 +5,8 @@
 
 
 # Replaces a config file with a symlink to a repo controlled config
-#  1: The file to replace
-#  2: The file in the ${LOCAL_CONFIG_DIR} folder
+#  1: The file or dir to replace
+#  2: The file or dir in the ${LOCAL_CONFIG_DIR} folder
 # Globals:
 #  LOCAL_CONFIG_DIR
 function replace_with_symlink()
@@ -23,9 +23,13 @@ function replace_with_symlink()
 
     # Does the link already match what we want it to?
     if [ "$(readlink -m ${LOCAL_CONFIG_DIR}/$2)" != "$(readlink -m $1)" ] ; then
-        rm -f $1
-        ln -s $(readlink -m ${LOCAL_CONFIG_DIR}/$2) $(readlink -m $1)
+        #make sure we're not replacing a file with a symlink to a dir, or visa versa
+        if [ "$(file $1 | awk -F: '{print $2}')" == "$(file ${LOCAL_CONFIG_DIR}/$2) | awk -F: '{print $2}'" ] ; then
+            rm -rf $1
+            ln -s $(readlink -m ${LOCAL_CONFIG_DIR}/$2) $(readlink -m $1)
+        fi
     fi
 }
 
 replace_with_symlink ~/.config/terminator/config terminator
+replace_with_symlink ~/.fluxbox fluxbox
