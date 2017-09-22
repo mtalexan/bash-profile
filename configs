@@ -24,7 +24,7 @@ function replace_with_symlink()
     # Does the link already match what we want it to?
     if [ "$(readlink -m ${LOCAL_CONFIG_DIR}/$2)" != "$(readlink -m $1)" ] ; then
         #make sure we're not replacing a file with a symlink to a dir, or visa versa
-        if [ "$(file $1 | awk -F: '{print $2}')" == "$(file ${LOCAL_CONFIG_DIR}/$2) | awk -F: '{print $2}'" ] ; then
+        if [ "$(file $1 | awk -F: '{print $2}')" == "$(file ${LOCAL_CONFIG_DIR}/$2 | awk -F: '{print $2}')" ] ; then
             rm -rf $1
             ln -s $(readlink -m ${LOCAL_CONFIG_DIR}/$2) $(readlink -m $1)
         fi
