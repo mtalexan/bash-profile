@@ -41,7 +41,7 @@ if [ -f ${LOCAL_PROFILES_DIR}/git-completion.bash ]; then
     __git_complete gcm _git_commit
 fi
 
-if ! command -v __git_ps1 ; then
+if ! command -v __git_ps1 &>/dev/null ; then
     if [ -f ${LOCAL_PROFILES_DIR}/git-prompt.sh ] ; then
         source ${LOCAL_PROFILES_DIR}/git-prompt.sh
     else
