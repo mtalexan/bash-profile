@@ -33,3 +33,4 @@ function replace_with_symlink()
 
 replace_with_symlink ~/.config/terminator/config terminator
 replace_with_symlink ~/.fluxbox fluxbox
+replace_with_symlink ~/.config/awesome awesome
