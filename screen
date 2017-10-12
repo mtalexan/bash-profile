@@ -11,8 +11,10 @@
 #             remote.
 # SAVE_SCREEN_AUTH : If set non-empty, the XAuth settings are saved as well to
 #                    allow authenticated X11 forwarding.
-
-
+# WIPE_SCREENS_ON_START : If set non-empty, wipe all detached screen sessions on
+#                         every login.  Useful when screen is the shell used by
+#                         a terminal but we aren't intending to keep things
+#                         around permanently.
 ##############################################################################
 # User defined "alias" commands for screen commands
 #
@@ -33,7 +35,7 @@ function reset_visual_editor()
     elif [ -z "$NO_REMOTE_WINDOW" ] ; then
         window_mode
     else #NO_REMOTE_WINDOW is set
-        #check if we're a remote session or not
+        #check if we're a remote X11 forwarding session or not
         LOCAL_DISP=`echo "$DISPLAY" | grep "localhost"` 
         if [ -z "$LOCAL_DISP" ] ; then
             #Do everything with windows normally
@@ -155,7 +157,7 @@ x11save
 ## Funtion allowing a new screen to be created with a name that's 
 ## used both in the screen's title and as the "socket" name (the name
 ## people see when they do screen -ls)
-function new_screen()
+function screen_new()
 {
     NAME=
 
@@ -171,3 +173,27 @@ function new_screen()
         screen $@
     fi
 }
+
+# With our terminal programs opening screen sessions,
+# we quickly build up a bunch of detached screens.  Give
+# a quick way to wipe them all.
+function screen_wipe()
+{
+    local DEAD_SESSIONS=`screen -ls | grep "Detached" | awk '{print $1}'`
+    for S in $DEAD_SESSIONS ; do
+        screen -X -S $S quit
+    done
+}
+
+# If WIPE_SCREENS_ON_START is set
+if [ -n "${WIPE_SCREENS_ON_START}" ] ; then
+    # clear all detached screen sessions, hiding the output when we do
+    screen_wipe &>/dev/null
+fi
+
+#check if we're a remote X11 forwarding session or not
+if echo "$DISPLAY" | grep -q "localhost" ; then
+    # automatically print the open screen sessions if we logged
+    # in with X11 forwarding
+    screen -ls
+fi
