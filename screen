@@ -17,6 +17,11 @@
 # User defined "alias" commands for screen commands
 #
 
+# Get this once so we have a random number to associate with each login.
+# Then if we have multiple separate logins trying to do different x11 forwarding
+# we can differentiate on a per-session basis
+SCREEN_SESSION_ID=${RANDOM}
+
 # Function that checks if our display is being forwarded and sets the VISUAL variable
 # to a non-windowed version if it is, or a windowed version if it isn't
 # Not used, everything is forwarded (don't do this right now since it's being used
@@ -27,9 +32,9 @@ function reset_visual_editor()
         nowindow_mode
     elif [ -z "$NO_REMOTE_WINDOW" ] ; then
         window_mode
-    else
+    else #NO_REMOTE_WINDOW is set
         #check if we're a remote session or not
-        LOCAL_DISP=`echo $DISPLAY | grep "localhost"` 
+        LOCAL_DISP=`echo "$DISPLAY" | grep "localhost"` 
         if [ -z "$LOCAL_DISP" ] ; then
             #Do everything with windows normally
             window_mode
@@ -49,23 +54,23 @@ function x11save()
         id="$1"
     fi
 
-    dispFile="/home/$USER/.echo.$USER.$id"
+    dispFile="/home/$USER/.echo.$USER.$id.$SCREEN_SESSION_ID."
     dispFile+="DISPLAY.txt"
     
-    authFile="/home/$USER/.parse.$USER.$id"
+    authFile="/home/$USER/.parse.$USER.$id.$SCREEN_SESSION_ID."
     authFile+="Xauth.txt"
 
     # Remember the DISPLAY variable
-    echo $DISPLAY >&2
-    echo $DISPLAY > $dispFile
+    echo "$DISPLAY" >&2
+    echo "$DISPLAY" > $dispFile
     chmod a+r $dispFile
 
     # Remember our xauth cookie
 
     #DISPLAY format is "sometext:##.##" where "sometext" is optional and ##'s are any 1 or multi digit numbers
     #Get the ## from the DISPLAY immediately after the ':' but before the '.'
-    DISP_NUM=`echo $DISPLAY | awk 'BEGIN {FS=":"}; {print $2}' | awk 'BEGIN {FS="."}; {print $1}'`
-    if [ $DISP_NUM != "0" ] ; then
+    DISP_NUM=`echo "$DISPLAY" | awk 'BEGIN {FS=":"}; {print $2}' | awk 'BEGIN {FS="."}; {print $1}'`
+    if [ -n "$DISP_NUM" ] && [ $DISP_NUM != "0" ] ; then
         xauth list | grep `echo :$DISP_NUM` >&2
         xauth list | grep `echo :$DISP_NUM` > $authFile
         chmod a+r $authFile
@@ -87,10 +92,10 @@ function x11load()
         id="$1"
     fi
 
-    dispFile="/home/$USER/.echo.$USER.$id"
+    dispFile="/home/$USER/.echo.$USER.$id.$SCREEN_SESSION_ID."
     dispFile+="DISPLAY.txt"
 
-    authFile="/home/$USER/.parse.$USER.$id"
+    authFile="/home/$USER/.parse.$USER.$id.$SCREEN_SESSION_ID."
     authFile+="Xauth.txt"
 
     if [ -n "$SAVE_SCREEN_AUTH" ] ; then
@@ -118,6 +123,17 @@ function x11load()
     else
         echo "No saved DISPLAY"
     fi
+
+    reset_visual_editor
+}
+
+# When a single screen session is shared between two locations,
+# the display to use gets fought over.  x11load sets it to the
+# remote display if it's an SSH session with X forwarding, but
+# the local needs a way to steal it back.
+function x11local()
+{
+    export DISPLAY=":0.0"
 
     reset_visual_editor
 }
@@ -150,7 +166,7 @@ function new_screen()
         #pull the name off the arg list, but keep the rest of the args
         NAME=$1
         shift
-        screen -t $NAME -S $NAME $@   
+        screen -A -a -t $NAME -S $NAME $@   
     else
         screen $@
     fi
