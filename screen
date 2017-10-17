@@ -174,6 +174,12 @@ function screen_new()
     fi
 }
 
+# Force quites a named screen session
+function screenkill()
+{
+    screen -X -S $1 quit
+}
+
 # With our terminal programs opening screen sessions,
 # we quickly build up a bunch of detached screens.  Give
 # a quick way to wipe them all.
@@ -181,9 +187,11 @@ function screen_wipe()
 {
     local DEAD_SESSIONS=`screen -ls | grep "Detached" | awk '{print $1}'`
     for S in $DEAD_SESSIONS ; do
-        screen -X -S $S quit
+        screenkill $S
     done
 }
+
+alias screenls='screen -ls '
 
 # If WIPE_SCREENS_ON_START is set
 if [ -n "${WIPE_SCREENS_ON_START}" ] ; then
