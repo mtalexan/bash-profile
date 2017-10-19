@@ -183,12 +183,48 @@ function screenkill()
 # With our terminal programs opening screen sessions,
 # we quickly build up a bunch of detached screens.  Give
 # a quick way to wipe them all.
-function screen_wipe()
+function screenwipe()
 {
     local DEAD_SESSIONS=`screen -ls | grep "Detached" | awk '{print $1}'`
     for S in $DEAD_SESSIONS ; do
         screenkill $S
     done
+}
+
+# This function parses the name of an attached or detached screen
+# passed to it, determines the timestamp, and gets the name of the
+# log file from it.
+# NOTE: This MUST match with the screenrc setting for the log file name
+function screentail()
+{
+    local NAME=$1
+    shift
+
+    # If we gave part of an automatically assigned name, this will work,
+    # otherwise we either don't get a second line or get only spaces that
+    # tr removes.
+    # This doesn't work if the screen has a custom name though.
+    SESSION_NAME=`screen -ls ${NAME} | awk 'NR==2 {print $1}' | tr -d ' '`
+    if [ -z "${SESSION_NAME}" ] ; then
+        # If we didn't get a match, just use the provided name and assume
+        # it was a custom name
+        SESSION_NAME=$NAME
+    fi
+
+    # This is highly dependent on the name given to the screen logs in
+    # the screenrc.  We assume the name log file is named "/tmp/screenlog.*"
+    # and that it ends with ".$SESSION_NAME".
+
+    # the log file is /tmp/screenlog.*.$SESSION_NAME so find it
+    local SCREEN_LOG_FILE=`find /tmp -name "screenlog.*.${SESSION_NAME}" 2>/dev/null`
+    if [ -z "$SCREEN_LOG_FILE" ] ; then
+        echo "No matching log file found for name: $SESSION_NAME"
+        return 1
+    else
+        echo >&2 "---------------------"
+        tail $@ $SCREEN_LOG_FILE
+        echo >&2 "---------------------"
+    fi
 }
 
 alias screenls='screen -ls '
