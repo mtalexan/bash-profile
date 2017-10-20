@@ -15,14 +15,9 @@
 #                         every login.  Useful when screen is the shell used by
 #                         a terminal but we aren't intending to keep things
 #                         around permanently.
-##############################################################################
-# User defined "alias" commands for screen commands
-#
-
-# Get this once so we have a random number to associate with each login.
-# Then if we have multiple separate logins trying to do different x11 forwarding
-# we can differentiate on a per-session basis
-SCREEN_SESSION_ID=${RANDOM}
+############################################################################
+MY_X11_DISP_FILE="/home/$USER/.x11.DISPLAY.txt"
+MY_X11_AUTH_FILE="/home/$USER/.xauth.Xauth.txt"
 
 # Function that checks if our display is being forwarded and sets the VISUAL variable
 # to a non-windowed version if it is, or a windowed version if it isn't
@@ -51,21 +46,10 @@ function reset_visual_editor()
 # entering a screen session.
 function x11save()
 {
-    id="User1"
-    if [ ! -u $1 ] ; then
-        id="$1"
-    fi
-
-    dispFile="/home/$USER/.echo.$USER.$id.$SCREEN_SESSION_ID."
-    dispFile+="DISPLAY.txt"
-    
-    authFile="/home/$USER/.parse.$USER.$id.$SCREEN_SESSION_ID."
-    authFile+="Xauth.txt"
-
     # Remember the DISPLAY variable
     echo "$DISPLAY" >&2
-    echo "$DISPLAY" > $dispFile
-    chmod a+r $dispFile
+    echo "$DISPLAY" > $MY_X11_DISP_FILE
+    chmod a+r $MY_X11_DISP_FILE
 
     # Remember our xauth cookie
 
@@ -74,11 +58,11 @@ function x11save()
     DISP_NUM=`echo "$DISPLAY" | awk 'BEGIN {FS=":"}; {print $2}' | awk 'BEGIN {FS="."}; {print $1}'`
     if [ -n "$DISP_NUM" ] && [ $DISP_NUM != "0" ] ; then
         xauth list | grep `echo :$DISP_NUM` >&2
-        xauth list | grep `echo :$DISP_NUM` > $authFile
-        chmod a+r $authFile
+        xauth list | grep `echo :$DISP_NUM` > $MY_X11_AUTH_FILE
+        chmod a+r $MY_X11_AUTH_FILE
     else
-        #clear the authFile if we're on local display
-        echo "" > $authFile
+        #clear the MY_X11_AUTH_FILE if we're on local display
+        echo "" > $MY_X11_AUTH_FILE
     fi
 
 }
@@ -89,23 +73,12 @@ function x11save()
 ## so the default is either windowed or non-windowed depending on the remote connection.
 function x11load()
 {
-    id="User1"
-    if [ ! -u $1 ] ; then
-        id="$1"
-    fi
-
-    dispFile="/home/$USER/.echo.$USER.$id.$SCREEN_SESSION_ID."
-    dispFile+="DISPLAY.txt"
-
-    authFile="/home/$USER/.parse.$USER.$id.$SCREEN_SESSION_ID."
-    authFile+="Xauth.txt"
-
     if [ -n "$SAVE_SCREEN_AUTH" ] ; then
-        if [ -f $authFile ] ; then
-            ADD=`cat $authFile`
+        if [ -f $MY_X11_AUTH_FILE ] ; then
+            ADD=`cat $MY_X11_AUTH_FILE`
             if [ ! -z "$ADD" ] ; then
-                echo `cat $authFile`
-                xauth add `cat $authFile`
+                echo `cat $MY_X11_AUTH_FILE`
+                xauth add `cat $MY_X11_AUTH_FILE`
             else
                 echo "No saved xauth"
             fi
@@ -114,11 +87,11 @@ function x11load()
         fi
     fi
 
-    if [ -f $dispFile ] ; then
-        ADD=`cat $dispFile`
+    if [ -f $MY_X11_DISP_FILE ] ; then
+        ADD=`cat $MY_X11_DISP_FILE`
         if [ ! -z "$ADD" ] ; then
-            echo `cat $dispFile`
-            export DISPLAY=`cat $dispFile`
+            echo `cat $MY_X11_DISP_FILE`
+            export DISPLAY=`cat $MY_X11_DISP_FILE`
         else
             echo "No saved DISPLAY"
         fi
