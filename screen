@@ -221,4 +221,4 @@ alias s-ls="screenls "
 alias s-wipe="screenwipe "
 alias s-tail="screentail "
 alias s-kill="screenkill "
-alias s-x="screen -x -S " #quick attach to running session with multi-view
+alias s-x="screen -x -e^ee -S " #quick attach to running session with multi-view
