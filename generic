@@ -49,3 +49,50 @@ export GCC_COLORS='error=01;31;warning=01;35:note=01;36:caret=01;32:locus=01:quo
 
 
 alias psme='ps alx | grep `id -u` '
+
+# Quickly mounts a device to a directory that may or may not yet exist
+# Arguments:
+#  1: device to mount
+#  2: Optional. Either an absolute path to mount to, or a subdirectory of /media/${USER}/.
+#     Empty will use  /media/${USER}/$(basename $device)
+#  3: Optionally any number of mount options and extra args can be specified that will be passed thru
+# Returns:
+#  Exit codes from commands on errors
+function quickmount()
+{
+    if [ -u $1 ] ; then
+        echo "ERROR: no device specified"
+        return 1
+    fi
+
+    local device=$1
+    local path=$2
+    if [ -u $2 ] ; then
+        shift 1
+    else
+        shift 2
+    fi
+    local opts=$@
+
+    local MOUNTPT_NAME=/media/${USER}/$(basename ${device})
+    if [ -n "${path}" ] ; then
+        # starts with a slash (absolute path)?
+        if echo "${path}" | grep -q "^/" ; then
+            MOUNTPT_NAME=${path}
+        else
+            MOUNTPT_NAME=/media/${USER}/${path}
+        fi
+    fi
+
+
+    echo "Mounting to: ${MOUNTPT_NAME}"
+    sudo mkdir -p ${MOUNTPT_NAME}
+    local err=$?
+    if [ $err -ne 0 ] ; then
+        echo "Unable to create directory(ies) ${MOUNTPT_NAME}"
+        return $err
+    fi
+
+    sudo mount ${opts} ${device} ${MOUNTPT_NAME}
+    return $?
+}
