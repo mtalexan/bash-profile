@@ -37,3 +37,4 @@ replace_with_symlink ~/.screenrc screenrc
 replace_with_symlink ~/.Xdefaults Xdefaults
 # some require it to be called .Xresources instead
 replace_with_symlink ~/.Xresources Xdefaults
+replace_with_symlink ~/.Xmodmap Xmodmap
