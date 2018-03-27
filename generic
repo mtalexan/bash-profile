@@ -34,6 +34,10 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto '
 fi
 
+# Normally the Ctrl+s is for forward search through history (opposite of Ctrl+r),
+# but Ctrl+s is default bound by most terminals to flow control XON/XOFF.  If we
+# explicitly set it to XON or XOFF though, the Ctrl+s binding gets freed up.
+stty -ixon
 
 # Set the cursor type
 #echo -e -n "\x1b[\x30 q" # changes to blinking block
