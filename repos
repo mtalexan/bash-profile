@@ -11,27 +11,12 @@ if [ -e $MSDK_PATH_SCRIPT ] ; then
     source $MSDK_PATH_SCRIPT
 fi
 
-# There should be some scripts to restore our last settings, source them
-RRSDK_PATH_SCRIPT=${LOCAL_REPOS_DIR}/set_rrsdk.sh
-if [ -e $RRSDK_PATH_SCRIPT ] ; then
-    source $RRSDK_PATH_SCRIPT
-fi
-
-MOD_PATH_SCRIPT=${LOCAL_REPOS_DIR}/set_modular.sh
-if [ -e $MOD_PATH_SCRIPT ] ; then
-    source $MOD_PATH_SCRIPT
-fi
-
 # Uncrustify
 export UNCRUSTIFY_CONFIG=${MODULAR_REPO_PATH}/tools/uncrustify.cfg
 
-alias srr='source ${LOCAL_REPOS_DIR}/rrsdk_repo_set_script.sh'
-alias smod='source ${LOCAL_REPOS_DIR}/modular_repo_set_script.sh'
 alias smsdk='source ${LOCAL_REPOS_DIR}/msdk_repo_set_script.sh'
 
 #defines complex aliases
-source ${LOCAL_REPOS_DIR}/rrsdk
-source ${LOCAL_REPOS_DIR}/modular
 source ${LOCAL_REPOS_DIR}/msdk
 
 # The scripts themselves need to know this as well
