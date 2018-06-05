@@ -14,8 +14,6 @@ fi
 # Uncrustify
 export UNCRUSTIFY_CONFIG=${MODULAR_REPO_PATH}/tools/uncrustify.cfg
 
-alias smsdk='source ${LOCAL_REPOS_DIR}/msdk_repo_set_script.sh'
-
 #defines complex aliases
 source ${LOCAL_REPOS_DIR}/msdk
 
