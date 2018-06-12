@@ -1,0 +1,16 @@
+# Add some standard includes to the path
+if [ -e ${HOME}/.local/bin ] ; then
+    export PATH=${HOME}/.local/bin:${PATH}
+fi
+
+# These are used for virtualenvwrapper, which provides an interface to a Python environment isolater
+export WORKON_HOME=${HOME}/virtenvs
+mkdir -p ${WORKON_HOME}
+
+export PROJECT_HOME=${HOME}/python-projects
+mkdir -p ${PROJECT_HOME}
+
+# Source the virtualenvwrapper_lazy script if we have it installed
+if dpkg -l virtualenvwrapper &>/dev/null ; then
+    source $(dpkg -L virtualenvwrapper | grep virtualenvwrapper_lazy.sh)
+fi
