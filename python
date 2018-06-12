@@ -12,5 +12,6 @@ mkdir -p ${PROJECT_HOME}
 
 # Source the virtualenvwrapper_lazy script if we have it installed
 if dpkg -l virtualenvwrapper &>/dev/null ; then
+    export VIRTUALENVWRAPPER_SCRIPT=$(dpkg -L virtualenvwrapper | grep virtualenvwrapper.sh)
     source $(dpkg -L virtualenvwrapper | grep virtualenvwrapper_lazy.sh)
 fi
