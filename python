@@ -4,7 +4,7 @@ if [ -e ${HOME}/.local/bin ] ; then
 fi
 
 # These are used for virtualenvwrapper, which provides an interface to a Python environment isolater
-export WORKON_HOME=${HOME}/virtenvs
+export WORKON_HOME=${HOME}/.virtualenvs
 mkdir -p ${WORKON_HOME}
 
 export PROJECT_HOME=${HOME}/python-projects
