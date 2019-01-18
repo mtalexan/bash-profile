@@ -35,6 +35,7 @@ replace_with_symlink ~/.fluxbox fluxbox
 replace_with_symlink ~/.config/awesome awesome
 replace_with_symlink ~/.config/i3 i3
 replace_with_symlink ~/.config/rofi rofi
+replace_with_symlink ~/.config/polybar polybar
 replace_with_symlink ~/.screenrc screenrc
 replace_with_symlink ~/.Xdefaults Xdefaults
 # some require it to be called .Xresources instead
