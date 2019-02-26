@@ -46,7 +46,7 @@ stty -ixon
 #echo -e -n "\x1b[\x33 q" # changes to blinking underline
 #echo -e -n "\x1b[\x34 q" # changes to steady underline
 #echo -e -n "\x1b[\x35 q" # changes to blinking bar
-echo -e -n "\x1b[\x36 q" # changes to steady bar
+#echo -e -n "\x1b[\x36 q" # changes to steady bar
 
 #force parsing of the correct .Xdefaults file since Ubuntu apparently
 #dislikes doing it
