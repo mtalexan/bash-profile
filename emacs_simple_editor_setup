@@ -1,0 +1,29 @@
+# Emacs functions related to how emacs and the editors are used.
+# Controls whether it opens in no-window mode or not.
+#
+# No arguments
+
+##############################################################################
+# User defined "alias" commands for x11 port forwarding when SSHing in, then
+# starting or joining a screen session where x11 port forwarding is wanted
+#
+
+# Function that just swaps most editor values for the no-window equivalent
+function nowindow_mode()
+{
+    export SUDOEDITOR="emacs -nw"
+    export GIT_EDITOR="emacs -nw"
+    export EDITOR="emacs -nw"
+    export VISUAL=
+}
+
+function window_mode()
+{
+    # we're using this in our sudo alias to make sure we don't try opening a client to our daemon when sudoing
+    export SUDOEDITOR="emacs"
+    export GIT_EDITOR="emacs"
+    export EDITOR="emacs "
+    export VISUAL="emacs "
+}
+
+window_mode
