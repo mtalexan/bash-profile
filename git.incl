@@ -15,38 +15,39 @@ git config --global alias.bvv "branch -vv"
 git config --global alias.last "log -1 HEAD"
 git config --global alias.update "pull --no-rebase --ff --no-commit --ff-only"
 
+##### Git Aliases 
+alias gs='git status '
+alias gd='git diff '
+alias gdc='git diff --cached '
+alias glg='git log --oneline --decorate --graph '
+alias gbvv='git branch -vv '
+alias gco='git checkout '
+alias ga='git add '
+alias gdt='git difftool --tool=ediff -y '
+alias g='git '
+alias gcm='git commit '
+
 if [ -n "${BASH}" ] ; then
+    ## Explicit completion commands required for the aliases above only in bash, zsh works automatically
     if [ -f ${LOCAL_PROFILES_DIR}/git-completion.bash ]; then
-           source ${LOCAL_PROFILES_DIR}/git-completion.bash
+        source ${LOCAL_PROFILES_DIR}/git-completion.bash
+        __git_complete gd _git_diff
+        __git_complete gd _git_diff
+        __git_complete glg _git_log
+        __git_complete gbvv _git_branch
+        __git_complete gc _git_checkout
+        __git_complete ga _git_add
+        __git_complete gdt _git_difftool
+        complete -o bashdefault -o default -o nospace -F _git g
+        __git_complete gcm _git_commit
+    fi
 
-           ##### Git Aliases with completion for each (requires the standard git completion script)
-           alias gs='git status '
-           alias gd='git diff '
-           __git_complete gd _git_diff
-           alias gdc='git diff --cached '
-           __git_complete gd _git_diff
-           alias glg='git log --oneline --decorate --graph '
-           __git_complete glg _git_log
-           alias gbvv='git branch -vv '
-           __git_complete gbvv _git_branch
-           alias gco='git checkout '
-           __git_complete gc _git_checkout
-           alias ga='git add '
-           __git_complete ga _git_add
-           alias gdt='git difftool --tool=ediff -y '
-           __git_complete gdt _git_difftool
-           alias g='git '
-           complete -o bashdefault -o default -o nospace -F _git g
-           alias gcm='git commit '
-           __git_complete gcm _git_commit
-       fi
-
-       if ! command -v __git_ps1 &>/dev/null ; then
-           if [ -f ${LOCAL_PROFILES_DIR}/git-prompt.sh ] ; then
-               source ${LOCAL_PROFILES_DIR}/git-prompt.sh
-           else
-               #since it's part of the command prompt
-               alias __git_ps1=' '
-           fi
-       fi
+    if ! command -v __git_ps1 &>/dev/null ; then
+        if [ -f ${LOCAL_PROFILES_DIR}/git-prompt.sh ] ; then
+            source ${LOCAL_PROFILES_DIR}/git-prompt.sh
+        else
+            #since it's part of the command prompt
+            alias __git_ps1=' '
+        fi
+    fi
 fi
