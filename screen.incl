@@ -121,12 +121,6 @@ screen_remote()
     screen $@
 }
 
-#alias screen="screen_remote"
-alias sls="screen -ls "
-
-#Always run x11save on login so the details are updated for screen sessions to use
-x11save
-
 ## Funtion allowing a new screen to be created with a name that's 
 ## used both in the screen's title and as the "socket" name (the name
 ## people see when they do screen -ls)
@@ -200,25 +194,34 @@ screentail()
     fi
 }
 
-alias screenls='screen -ls '
+# Only if screen is installed
+if command -v screen &>/dev/null ; then
+    #alias screen="screen_remote"
+    alias sls="screen -ls "
 
-# If WIPE_SCREENS_ON_START is set
-if [ -n "${WIPE_SCREENS_ON_START}" ] ; then
-    # clear all detached screen sessions, hiding the output when we do
-    screen_wipe &>/dev/null
+    #Always run x11save on login so the details are updated for screen sessions to use
+    x11save
+
+    alias screenls='screen -ls '
+
+    # If WIPE_SCREENS_ON_START is set
+    if [ -n "${WIPE_SCREENS_ON_START}" ] ; then
+        # clear all detached screen sessions, hiding the output when we do
+        screen_wipe &>/dev/null
+    fi
+
+    #check if we're a remote X11 forwarding session or not
+    if echo "$DISPLAY" | grep -q "localhost" ; then
+        # automatically print the open screen sessions if we logged
+        # in with X11 forwarding
+        screen -ls
+    fi
+
+
+    # Set some shortcut aliases
+    alias s-ls="screenls "
+    alias s-wipe="screenwipe "
+    alias s-tail="screentail "
+    alias s-kill="screenkill "
+    alias s-x="screen -x -e^ee -S " #quick attach to running session with multi-view
 fi
-
-#check if we're a remote X11 forwarding session or not
-if echo "$DISPLAY" | grep -q "localhost" ; then
-    # automatically print the open screen sessions if we logged
-    # in with X11 forwarding
-    screen -ls
-fi
-
-
-# Set some shortcut aliases
-alias s-ls="screenls "
-alias s-wipe="screenwipe "
-alias s-tail="screentail "
-alias s-kill="screenkill "
-alias s-x="screen -x -e^ee -S " #quick attach to running session with multi-view

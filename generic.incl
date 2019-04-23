@@ -17,6 +17,9 @@ export GCC_COLORS='error=01;31;warning=01;35:note=01;36:caret=01;32:locus=01:quo
 
 alias psme='ps alx | grep `id -u` '
 
+# set the pager, have it passthru ASCII color codes
+export PAGER="less -R"
+
 # Quickly mounts a device to a directory that may or may not yet exist
 # Arguments:
 #  1: device to mount
