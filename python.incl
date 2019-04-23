@@ -10,8 +10,10 @@ mkdir -p ${WORKON_HOME}
 export PROJECT_HOME=${HOME}/python-projects
 mkdir -p ${PROJECT_HOME}
 
-# Source the virtualenvwrapper_lazy script if we have it installed
-if dpkg -l virtualenvwrapper &>/dev/null ; then
-    export VIRTUALENVWRAPPER_SCRIPT=$(dpkg -L virtualenvwrapper | grep virtualenvwrapper.sh)
-    source $(dpkg -L virtualenvwrapper | grep virtualenvwrapper_lazy.sh)
+if command -v dpkg &>/dev/null ; then
+    # Source the virtualenvwrapper_lazy script if we have it installed
+    if dpkg -l virtualenvwrapper &>/dev/null ; then
+        export VIRTUALENVWRAPPER_SCRIPT=$(dpkg -L virtualenvwrapper | grep virtualenvwrapper.sh)
+        source $(dpkg -L virtualenvwrapper | grep virtualenvwrapper_lazy.sh)
+    fi
 fi

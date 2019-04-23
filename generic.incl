@@ -1,38 +1,12 @@
-# Basic generic settings.  Includes history size and settings,
-# aliases for colorization, git status in the prompt, and user based process aliasing.
-#
-# Requires git 
-# No arguments
 
-# don't put duplicate lines in the history. See bash(1) for more options
+# don't put duplicate lines in the history. See bash(1) or zsh for more options
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
 
-# append to the history file, don't overwrite it
-shopt -s histappend
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1) or zsh
+HISTSIZE=100000
+HISTFILESIZE=200000
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
-
-# add the git settings to the command prompt
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;34m\]\w\[\033[00m\]\[\033[1;33m\]$(__git_ps1)\[\033[00m\] \$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\w$(__git_ps1) \$ '
-fi
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto '
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto '
-    alias fgrep='fgrep --color=auto '
-    alias egrep='egrep --color=auto '
-fi
 
 # Normally the Ctrl+s is for forward search through history (opposite of Ctrl+r),
 # but Ctrl+s is default bound by most terminals to flow control XON/XOFF.  If we
@@ -48,13 +22,8 @@ stty -ixon
 #echo -e -n "\x1b[\x35 q" # changes to blinking bar
 #echo -e -n "\x1b[\x36 q" # changes to steady bar
 
-#force parsing of the correct .Xdefaults file since Ubuntu apparently
-#dislikes doing it
-xrdb ~/.Xdefaults
-
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31;warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
 
 alias psme='ps alx | grep `id -u` '
 
@@ -66,7 +35,7 @@ alias psme='ps alx | grep `id -u` '
 #  3: Optionally any number of mount options and extra args can be specified that will be passed thru
 # Returns:
 #  Exit codes from commands on errors
-function quickmount()
+quickmount()
 {
     if [ -u $1 ] ; then
         echo "ERROR: no device specified"

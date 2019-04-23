@@ -23,7 +23,7 @@ MY_X11_AUTH_FILE="/home/$USER/.xauth.Xauth.txt"
 # to a non-windowed version if it is, or a windowed version if it isn't
 # Not used, everything is forwarded (don't do this right now since it's being used
 # when ssh-ing on-site)
-function reset_visual_editor()
+reset_visual_editor()
 {
     if [ -n "$NO_WINDOW" ] ; then
         nowindow_mode
@@ -44,7 +44,7 @@ function reset_visual_editor()
 
 # Saves the DISPLAY and x11 authorizations to files so they can be retrieved after
 # entering a screen session.
-function x11save()
+x11save()
 {
     # Remember the DISPLAY variable
     echo "$DISPLAY" >&2
@@ -71,7 +71,7 @@ function x11save()
 ## to forward graphics when connecting remotely, or to not forward graphics if not
 ## connecting remotely.  Also has the side effect of updating the VISUAL variable
 ## so the default is either windowed or non-windowed depending on the remote connection.
-function x11load()
+x11load()
 {
     if [ -n "$SAVE_SCREEN_AUTH" ] ; then
         if [ -f $MY_X11_AUTH_FILE ] ; then
@@ -106,7 +106,7 @@ function x11load()
 # the display to use gets fought over.  x11load sets it to the
 # remote display if it's an SSH session with X forwarding, but
 # the local needs a way to steal it back.
-function x11local()
+x11local()
 {
     export DISPLAY=":0.0"
 
@@ -114,7 +114,7 @@ function x11local()
 }
 
 ## Function to handle automatically saving the x11 setup when a calling screen
-function screen_remote()
+screen_remote()
 {
     # Hide the output from saving the screen setup
     x11save 1>&2
@@ -130,7 +130,7 @@ x11save
 ## Funtion allowing a new screen to be created with a name that's 
 ## used both in the screen's title and as the "socket" name (the name
 ## people see when they do screen -ls)
-function screen_new()
+screen_new()
 {
     NAME=
 
@@ -148,7 +148,7 @@ function screen_new()
 }
 
 # Force quites a named screen session
-function screenkill()
+screenkill()
 {
     screen -X -S $1 quit
 }
@@ -156,7 +156,7 @@ function screenkill()
 # With our terminal programs opening screen sessions,
 # we quickly build up a bunch of detached screens.  Give
 # a quick way to wipe them all.
-function screenwipe()
+screenwipe()
 {
     local DEAD_SESSIONS=`screen -ls | grep "Detached" | awk '{print $1}'`
     for S in $DEAD_SESSIONS ; do
@@ -168,7 +168,7 @@ function screenwipe()
 # passed to it, determines the timestamp, and gets the name of the
 # log file from it.
 # NOTE: This MUST match with the screenrc setting for the log file name
-function screentail()
+screentail()
 {
     local NAME=$1
     shift

@@ -31,14 +31,14 @@ export EMACS_DAEMON_SOCKET_PATH=$EMACS_DAEMON_SOCKET_PATH_USER
 ## two sub-functions are called, it can either guarantee a singleton per server, or it can have
 ## a unique daemon persession.  If the per_session is used with screen, it will end up with a
 ## single daemon per screen session
-function emacss_startup()
+emacss_startup()
 {
     emacss_startup_singleton $@
 }
 
 ## Determines whether the emacs server is running, and starts it silently if it isn't.
 ## Looks for the specific server named based on the EMACS_DAEMON_NAME for the server
-function emacss_check_start_daemon()
+emacss_check_start_daemon()
 {
     TMP=$(ps alx | grep $(id -u) | grep -E "emacs[ ]+--daemon=" | grep -v "grep" | awk '{print $13}')
 
@@ -80,7 +80,7 @@ function emacss_check_start_daemon()
 ## as calls to emacsclient that's connecting to that emacs server.  Any arguments
 ## are passed directly to the emacsclient call.  Uses EMACS_DAEMON_NAME as the name
 ## of the server to check if it's already running
-function emacss_startup_per_session()
+emacss_startup_per_session()
 {
     emacss_check_start_daemon
 
@@ -90,7 +90,7 @@ function emacss_startup_per_session()
 
 ## Looks for a currently running emacs server and parses out the name of the first one found,
 ## setting the EMACS_DAEMON_NAME accordingly.  Does nothing if one isn't running
-function emacss_get_current_daemon_name()
+emacss_get_current_daemon_name()
 {
     # get the username's number
     USERID=$(id -u $USER)
@@ -121,7 +121,7 @@ function emacss_get_current_daemon_name()
 
 ## Gets and sets the EMACS_DAEMON_NAME from the first currently running emacs server found (if any) and then
 ## calls emacss_startup_per_session
-function emacss_startup_singleton()
+emacss_startup_singleton()
 {
     emacss_get_current_daemon_name
     
@@ -130,7 +130,7 @@ function emacss_startup_singleton()
 }
 
 ## Finds the PID of the emacs server daemon process and kills it
-function emacss_kill()
+emacss_kill()
 {
     TMP=$(ps ax | grep "daemon=$EMACS_DAEMON_NAME" | grep -v "grep" | awk '{print $1}')
     if [ -n "$TMP" ] ; then
@@ -143,7 +143,7 @@ function emacss_kill()
 ## Macro to alias the "exit" command to so we'll automatically kill the 
 ## emacs server for the terminal. Do any filtering on sub-terminals here
 ## so the emacs server can be killed first if necessary
-function exit_cleanup()
+exit_cleanup()
 {
     TMP=$(ps ax | grep "daemon=$EMACS_DAEMON_NAME" | grep -v "grep" | awk '{print $1}')
     if [ -n "$TMP" ] ; then

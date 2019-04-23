@@ -6,7 +6,7 @@
 # find emacs or some of the locally installed stuff.  Use \$PATH in this
 # so the $PATH doesn't get processed until the sudo alias is actually
 # invoked rather than being replaced here immediately
-alias sudo="sudo PATH=\"\$PATH\" "
+#alias sudo="sudo PATH=\"\$PATH\" "
 
 # we're using this in our sudo alias to make sure we don't try opening a client to our daemon when sudoing
 export SUDOEDITOR="emacs"

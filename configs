@@ -9,7 +9,7 @@
 #  2: The file or dir in the ${LOCAL_CONFIG_DIR} folder
 # Globals:
 #  LOCAL_CONFIG_DIR
-function replace_with_symlink()
+replace_with_symlink()
 {
     #does the target actually exist?
     if [ -z "$(readlink -e ${LOCAL_CONFIG_DIR}/$2)" ] ; then
