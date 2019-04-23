@@ -9,7 +9,7 @@
 #
 
 # Function that just swaps most editor values for the no-window equivalent
-function nowindow_mode()
+nowindow_mode()
 {
     export SUDOEDITOR="emacs -nw"
     export GIT_EDITOR="emacs -nw"
@@ -17,7 +17,7 @@ function nowindow_mode()
     export VISUAL=
 }
 
-function window_mode()
+window_mode()
 {
     # we're using this in our sudo alias to make sure we don't try opening a client to our daemon when sudoing
     export SUDOEDITOR="emacs"
