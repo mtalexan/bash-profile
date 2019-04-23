@@ -1,0 +1,81 @@
+# The one file that can be included to get everything in this folder
+#
+# This file should be included in the .bashrc at the end of the file.
+#
+# Arguments:
+#  MY_TOOLS_DIR : The path to the directory this repo is in
+
+#arguments to sub-files
+LOCAL_PROFILES_DIR=${MY_TOOLS_DIR}/profile
+LOCAL_REPOS_DIR=${MY_TOOLS_DIR}/repos
+LOCAL_CONFIG_DIR=${MY_TOOLS_DIR}/config
+
+#extend the path to include our tools directories
+export PATH=${MY_TOOLS_DIR}/scripts:${MY_TOOLS_DIR}/repos/tools:${PATH}
+
+##################################################################################
+
+if [ -n "$ZSH_NAME" ] ; then
+  source ${LOCAL_PROFILES_DIR}/antigen-include.zsh
+
+  # fixes things screwed up by oh-my-zsh and antigen
+  # this must be done before including anything that might provide bash-style completions
+  source ${LOCAL_PROFILES_DIR}/zsh-completion-fixes.zsh
+fi
+
+source ${LOCAL_PROFILES_DIR}/sudo.incl
+
+# Temporary work around until it can be migrated to the right place everywhere
+if [ -n "${BASH}" ] && [[ "$(uname -n)" = "ubuntu" ]] ; then
+    EMACS_USE_DAEMON=true
+fi
+
+# look for EMACS_USE_DAEMON=true to determine if we should use our custom written daemon aliases
+if [ -n "${EMACS_USE_DAEMON}" ] && ${EMACS_USE_DAEMON} ; then
+    source ${LOCAL_PROFILES_DIR}/emacs_daemon.incl
+fi
+
+# must come after possible emacs_daemon
+source ${LOCAL_PROFILES_DIR}/emacs_window.incl
+# must come after emacs_window
+source ${LOCAL_PROFILES_DIR}/screen.incl
+
+# Is the gtags installation folder unspecified?
+if [ -z "${GTAGS_INSTALL_DIR}" ] ; then
+    # is gtags installed on the system?
+    GTAGS_INSTALL_DIR=$(which gtags)
+    if [ -n "${GTAGS_INSTALL_DIR}" ] ; then
+        # drop the file name and the bin directory name
+        export GTAGS_INSTALL_DIR=$(dirname $(dirname ${GTAGS_INSTALL_DIR}))
+    else
+        unset GTAGS_INSTALL_DIR
+    fi
+fi
+# do we have a version of gtags we can use?
+if [ -n "${GTAGS_INSTALL_DIR}" ] ; then
+    source ${LOCAL_PROFILES_DIR}/emacs_gtags.incl
+fi
+
+source ${LOCAL_PROFILES_DIR}/repos.incl
+source ${LOCAL_PROFILES_DIR}/altera.incl
+
+source ${LOCAL_PROFILES_DIR}/generic.incl
+if [ -n "$ZSH_NAME" ]  ; then
+  source ${LOCAL_PROFILES_DIR}/generic.zsh
+elif [ -n "$BASH" ] ; then
+  source ${LOCAL_PROFILES_DIR}/generic.bash
+fi
+
+source ${LOCAL_PROFILES_DIR}/python.incl
+source ${LOCAL_PROFILES_DIR}/git.incl
+
+if [ -n "$BASH" ] ; then
+  source ${LOCAL_PROFILES_DIR}/alias_completion.bash
+fi
+
+source ${LOCAL_PROFILES_DIR}/configs.incl
+
+if [ -n "$ZSH_NAME" ] ; then
+    # adds navigation key bindings that override oh-my-zsh
+    source ${LOCAL_PROFILES_DIR}/keys.config
+fi
