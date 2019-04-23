@@ -16,7 +16,7 @@ git config --global alias.last "log -1 HEAD"
 git config --global alias.update "pull --no-rebase --ff --no-commit --ff-only"
 
 if [ -n "${BASH}" ] ; then
-    if [ [ -f ${LOCAL_PROFILES_DIR}/git-completion.bash ]; then
+    if [ -f ${LOCAL_PROFILES_DIR}/git-completion.bash ]; then
            source ${LOCAL_PROFILES_DIR}/git-completion.bash
 
            ##### Git Aliases with completion for each (requires the standard git completion script)
