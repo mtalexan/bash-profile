@@ -1,13 +1,3 @@
-
-# don't put duplicate lines in the history. See bash(1) or zsh for more options
-# ... or force ignoredups and ignorespace
-HISTCONTROL=ignoredups:ignorespace
-
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1) or zsh
-HISTSIZE=100000
-HISTFILESIZE=200000
-
-
 # Normally the Ctrl+s is for forward search through history (opposite of Ctrl+r),
 # but Ctrl+s is default bound by most terminals to flow control XON/XOFF.  If we
 # explicitly set it to XON or XOFF though, the Ctrl+s binding gets freed up.
