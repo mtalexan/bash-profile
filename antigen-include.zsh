@@ -35,6 +35,7 @@ antigen bundle djui/alias-tips
 antigen bundle unixorn/autoupdate-antigen.zshplugin
 antigen bundle joel-porquet/zsh-dircolors-solarized.git
 
+# Theme setting
 source ${LOCAL_PROFILES_DIR}/zsh-theme.zsh
 
 # must be last

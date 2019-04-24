@@ -1,8 +1,23 @@
 
+# used for the pure theme instead of antigen theme
+antigen bundle mafredri/zsh-async
+antigen bundle sindresorhus/pure
+
+#antigen theme yarisgutierrez/classyTouch_oh-my-zsh
+
+#antigen theme the0neWhoKnocks/zsh-theme-boom skin
+
+#antigen theme ginfuru/zsh-blackrain
+
+BENDER_THEME_STYLE=mini
+#antigen theme specious/bender
+
+export AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' )
+#antigen theme agkozak/agkozak-zsh-prompt
+
 source ${LOCAL_PROFILES_DIR}/powerlevel10k.config
 # hide 'context' segment when username matches this
 DEFAULT_USER=aaravchen
-#antigen theme bhilburn/powerlevel9k
 #antigen theme romkatv/powerlevel10k
 
 export SPACESHIP_EXEC_TIME_SHOW=false
