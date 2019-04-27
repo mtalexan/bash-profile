@@ -16,11 +16,14 @@ export PATH=${MY_TOOLS_DIR}/scripts:${MY_TOOLS_DIR}/repos/tools:${PATH}
 ##################################################################################
 
 if [ -n "$ZSH_NAME" ] ; then
-  source ${LOCAL_PROFILES_DIR}/antigen-include.zsh
+    # setup how completion should work in general, before antigen triggers it
+    source ${LOCAL_PROFILES_DIR}/zsh-completion-setup.zsh
 
-  # fixes things screwed up by oh-my-zsh and antigen
-  # this must be done before including anything that might provide bash-style completions
-  source ${LOCAL_PROFILES_DIR}/zsh-completion-fixes.zsh
+    source ${LOCAL_PROFILES_DIR}/antigen-include.zsh
+
+    # fixes things screwed up by oh-my-zsh and antigen
+    # this must be done before including anything that might provide bash-style completions
+    source ${LOCAL_PROFILES_DIR}/zsh-completion-fixes.zsh
 fi
 
 source ${LOCAL_PROFILES_DIR}/sudo.incl

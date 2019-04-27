@@ -11,6 +11,12 @@ fi
 
 # Load the oh-my-zsh's library.
 antigen use oh-my-zsh
+
+#generic settings
+CASE_SENSITIVE="true"
+COMPLETION_WAITING_DOTS="true"
+HIST_STAMPS="yyyy-mm-dd"
+
 # oh-my-zsh bundles
 antigen bundle gitfast
 antigen bundle pip
@@ -40,3 +46,22 @@ source ${LOCAL_PROFILES_DIR}/zsh-theme.zsh
 
 # must be last
 antigen apply
+
+############################################################
+#                  WARNING
+############################################################
+## If you get the following errors after an antigen bundle is installed:
+##
+##    zsh compinit: insecure directories, run compaudit for list.
+##    Ignore insecure directories and continue [y] or abort compinit [n]? 
+##
+## It's because the compinit command checks to ensure files it scans are
+## only writeable by the current user or root.  `compaudit' lists the files
+## that are problematic.
+## To correct them all automatically by removing the insecure write permissions
+## run the following command:
+##
+##    compaudit 2>&1 | tail +2 | xargs -I{} chmod go-w {}
+##
+############################################################
+############################################################

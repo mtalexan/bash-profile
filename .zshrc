@@ -1,34 +1,14 @@
-# The following lines were added by compinstall
+#####
+# This file is a template and should not be used directly.
+#####
 
-# set that was way too slow
-#zstyle ':completion:*' completer _list _expand _complete _ignored _match
-#zstyle ':completion:*' completions 1
-#zstyle ':completion:*' glob 1
-#zstyle ':completion:*' insert-unambiguous true
-#zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-#zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-#zstyle ':completion:*' max-errors 1
-#zstyle ':completion:*' menu select=long
-#zstyle ':completion:*' preserve-prefix '//[^/]##/'
-#zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-#zstyle ':completion:*' substitute 1
-#zstyle ':completion:*' use-compctl true
-#zstyle :compinstall filename '/home/aaravchen/.zshrc'
 
-# subset to keep
-zstyle ':completion:*' completer _list _expand _complete _ignored _match
-zstyle ':completion:*' completions 1
-zstyle ':completion:*' insert-unambiguous true
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' preserve-prefix '//[^/]##/'
-zstyle ':completion:*' use-cache yes
+## Path containin a bin folder with gtags in it, if it's not already in the PATH
+#export GTAGS_INSTALL_DIR=${HOME}/global-6.5.6
 
-autoload -U +X -z compinit && compinit
+## Force custom emacs daemon definitions. Conflicts with oh-my-zsh emacs package.
+## Auto-enabled for bash on Ubuntu
+#export EMACS_USE_DAEMON=true
 
-# Must be after antigen apply to override
-# oh-my-zsh bindings
-
-# Load the profile scripts
-export GTAGS_INSTALL_DIR=/home/dev/global-6.5.6
-export MY_TOOLS_DIR=/home/dev/my-tools
+export MY_TOOLS_DIR=${HOME}/my-tools
 source ${MY_TOOLS_DIR}/all.incl
