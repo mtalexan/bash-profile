@@ -34,6 +34,7 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 
 ZSH_AUTOSUGGEST_STRATEGY=(history)
 ZSH_AUTOSUGGEST_USE_ASYNC=true
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=6'
 antigen bundle zsh-users/zsh-autosuggestions
 
 # Other bundles
