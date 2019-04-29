@@ -4,7 +4,7 @@
 
 
 ## Set the default user so prompts will know when you're running as a different user
-#export DEFAULT_USER=myself
+#export DEFAULT_USER="myself"
 
 ## Path containin a bin folder with gtags in it, if it's not already in the PATH
 #export GTAGS_INSTALL_DIR=${HOME}/global-6.5.6
