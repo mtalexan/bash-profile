@@ -19,11 +19,18 @@ if [ -n "$ZSH_NAME" ] ; then
     # setup how completion should work in general, before antigen triggers it
     source ${LOCAL_PROFILES_DIR}/zsh-completion-setup.zsh
 
-    source ${LOCAL_PROFILES_DIR}/antigen-include.zsh
+    if [ -n "$USE_PREZTO" ] ; then
+        # setup bash completion as well
+        source ${LOCAL_PROFILES_DIR}/zsh-completion-fixes.zsh
+        source ${LOCAL_PROFILES_DIR}/prezto-include.zsh
+    else
+    #if [ -n "$USE_ANTIGEN" ] ; then
+        source ${LOCAL_PROFILES_DIR}/antigen-include.zsh
 
-    # fixes things screwed up by oh-my-zsh and antigen
-    # this must be done before including anything that might provide bash-style completions
-    source ${LOCAL_PROFILES_DIR}/zsh-completion-fixes.zsh
+        # fixes things screwed up by oh-my-zsh and antigen
+        # this must be done before including anything that might provide bash-style completions
+        source ${LOCAL_PROFILES_DIR}/zsh-completion-fixes.zsh
+    fi
 fi
 
 source ${LOCAL_PROFILES_DIR}/sudo.incl

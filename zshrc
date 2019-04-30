@@ -13,5 +13,9 @@
 ## Auto-enabled for bash on Ubuntu
 #export EMACS_USE_DAEMON=true
 
+# Optionally use prezto instead of antigen
+# export USE_PREZTO=true
+# be sure to run the prezto installer if you pick this option
+
 export MY_TOOLS_DIR=${HOME}/my-tools
 source ${MY_TOOLS_DIR}/all.incl

@@ -1,13 +1,21 @@
 
 # used for the pure theme instead of antigen theme
-antigen bundle mafredri/zsh-async
-antigen bundle sindresorhus/pure
+#antigen bundle mafredri/zsh-async
+#antigen bundle sindresorhus/pure
 
 #antigen theme yarisgutierrez/classyTouch_oh-my-zsh
 
 #antigen theme the0neWhoKnocks/zsh-theme-boom skin
 
 #antigen theme ginfuru/zsh-blackrain
+
+#antigen theme eptaccio/eubw-oh-my-zsh-theme
+
+#antigen theme davydovanton/excess.zsh-theme excess
+
+
+FILTHY_ALWAYS_SHOW_FULL_PATH=1
+antigen theme molovo/filthy
 
 BENDER_THEME_STYLE=mini
 #antigen theme specious/bender
