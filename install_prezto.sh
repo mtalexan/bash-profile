@@ -42,4 +42,4 @@ for F in zlogin zlogout zprofile zshenv ; do
     fi
 done
 
-# Don't need to do anything with cloning garrett, it's now included in .zprezto
+# Garrett prompt is already integrated as an external theme

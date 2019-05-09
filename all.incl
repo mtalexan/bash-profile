@@ -20,6 +20,14 @@ fi
 
 ##################################################################################
 
+# This must be done first so prompts always use the right colors
+if [[ "$(uname -n)" = "ubuntu" ]] ; then
+    #force parsing of the correct .Xdefaults file since Ubuntu apparently
+    #dislikes doing it
+    xrdb ~/.Xdefaults
+fi
+
+
 if [ -n "$ZSH_NAME" ] ; then
     # setup how completion should work in general, before antigen triggers it
     source ${LOCAL_PROFILES_DIR}/zsh-completion-setup.zsh
