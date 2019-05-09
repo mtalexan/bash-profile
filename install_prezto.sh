@@ -42,24 +42,4 @@ for F in zlogin zlogout zprofile zshenv ; do
     fi
 done
 
-# Setup the garrett theme
-TEMPDIR=${HOME}/garret-prompt-${RANDOM}
-
-
-if [ ! -e ${HOME}/.zprezto/modules/prompt/functions/prompt_garrett_setup ] ; then
-    if ! git clone https://github.com/chauncey-garrett/zsh-prompt-garrett ${TEMPDIR} ; then
-        echo "ERROR couldn't clone prompt repo"
-        exit 1
-    fi
-
-    if ! cp ${TEMPDIR}/prompt_garrett_setup ${HOME}/.zprezto/modules/prompt/functions/ ; then
-        echo "ERROR couldn't copy prompt_garrett_setup to zprezto location"
-        exit 1
-    fi
-
-    if ! rm -r ${TEMPDIR} ; then
-        echo "ERROR couldn't cleanup ${TEMPDIR}, do it manually"
-    fi
-
-    echo "Make sure to set the theme to 'garrett' in the .zprezto file ad change the plugin order"
-fi
+# Don't need to do anything with cloning garrett, it's now included in .zprezto

@@ -10,8 +10,13 @@ LOCAL_PROFILES_DIR=${MY_TOOLS_DIR}/profile
 LOCAL_REPOS_DIR=${MY_TOOLS_DIR}/repos
 LOCAL_CONFIG_DIR=${MY_TOOLS_DIR}/config
 
-#extend the path to include our tools directories
-export PATH=${MY_TOOLS_DIR}/scripts:${MY_TOOLS_DIR}/repos/tools:${PATH}
+#extend the path to include our tools directories if they exist
+if [ -d ${MY_TOOLS_DIR}/scripts ] ; then
+    export PATH=${MY_TOOLS_DIR}/scripts:${PATH}
+fi
+if [ -d ${MY_TOOLS_DIR}/repos/tools ] ; then
+    export PATH=${MY_TOOLS_DIR}/repos/tools:${PATH}
+fi
 
 ##################################################################################
 
