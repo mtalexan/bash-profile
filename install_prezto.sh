@@ -8,6 +8,9 @@ if [ -d ${HOME}/.zprezto ] ; then
 elif ! git clone https://github.com/chauncey-garrett/zsh-prezto  ${HOME}/.zprezto ; then
     echo "ERROR during cloning"
     exit 1
+elif ! git -C ${HOME}/.zprezto submodule update --init --recursive ; then
+    echo "ERROR during submodule updating"
+    exit 1
 fi
 
 # Copy the template if we don't have one already
@@ -27,7 +30,7 @@ fi
 # zprezto comes from this location
 if [ -e ${HOME}/.zprezto ] ; then
     echo "~/.zprezto already exists, skipping"
-elif ! ln -sr ${SCRIPT_DIR}/zprezto ${HOME}/.zprezto ; then
+elif ! ln -sr ${SCRIPT_DIR}/zpreztorc ${HOME}/.zpreztorc ; then
     echo "ERROR symlinking .zprezto"
     exit 1
 fi
