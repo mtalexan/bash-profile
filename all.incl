@@ -21,7 +21,7 @@ fi
 ##################################################################################
 
 # This must be done first so prompts always use the right colors
-if [[ "$(uname -n)" = "ubuntu" ]] ; then
+if uname -a | grep -iq "ubuntu" ; then
     #force parsing of the correct .Xdefaults file since Ubuntu apparently
     #dislikes doing it
     xrdb ~/.Xdefaults
@@ -49,7 +49,7 @@ fi
 source ${LOCAL_PROFILES_DIR}/sudo.incl
 
 # Temporary work around until it can be migrated to the right place everywhere
-if [ -n "${BASH}" ] && [[ "$(uname -n)" = "ubuntu" ]] ; then
+if [ -n "${BASH}" ] && uname -a | grep -iq "ubuntu"  ; then
     EMACS_USE_DAEMON=true
 fi
 
