@@ -27,11 +27,11 @@ fi
 
 # setup the symlinks
 
-# zprezto comes from this location
-if [ -e ${HOME}/.zprezto ] ; then
-    echo "~/.zprezto already exists, skipping"
+# zpreztorc comes from this location
+if [ -e ${HOME}/.zpreztorc ] ; then
+    echo "~/.zpreztorc already exists, skipping"
 elif ! ln -sr ${SCRIPT_DIR}/zpreztorc ${HOME}/.zpreztorc ; then
-    echo "ERROR symlinking .zprezto"
+    echo "ERROR symlinking .zpreztorc"
     exit 1
 fi
 
