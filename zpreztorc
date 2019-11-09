@@ -37,17 +37,19 @@ zstyle ':prezto:load' pmodule \
   'git' \
   'python' \
   'screen' \
+  'fasd' \
   'syntax-highlighting' \
   'autosuggestions' \
   'prompt'
 
 #'autosuggestions' must be after 'syntax-highlighting'
 #'autosuggestions' must be after 'history-substring-search'
-#'completions' must be after 'utility'
+#'completion' must be after 'utility'
 #'environment' must be loaded first
 #'syntax-highlighting' must be second to last, right before 'prompt'
 #  unless 'history-substring-search' is also used, then right before
 #  it as well.
+#'fasd' must be after 'completion'
 
 
 #
