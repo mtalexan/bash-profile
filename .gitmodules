@@ -1,0 +1,3 @@
+[submodule "tools/zsh-bd"]
+	path = tools/zsh-bd
+	url = https://github.com/Tarrasch/zsh-bd
