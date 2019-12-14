@@ -6,9 +6,9 @@
 #  MY_TOOLS_DIR : The path to the directory this repo is in
 
 #arguments to sub-files
-LOCAL_PROFILES_DIR=${MY_TOOLS_DIR}/profile
-LOCAL_REPOS_DIR=${MY_TOOLS_DIR}/repos
-LOCAL_CONFIG_DIR=${MY_TOOLS_DIR}/config
+export LOCAL_PROFILES_DIR=${MY_TOOLS_DIR}/profile
+export LOCAL_REPOS_DIR=${MY_TOOLS_DIR}/repos
+export LOCAL_CONFIG_DIR=${MY_TOOLS_DIR}/config
 
 #extend the path to include our tools directories if they exist
 if [ -d ${MY_TOOLS_DIR}/scripts ] ; then
@@ -89,6 +89,7 @@ elif [ -n "$BASH" ] ; then
   source ${LOCAL_PROFILES_DIR}/generic.bash
 fi
 
+source ${LOCAL_PROFILES_DIR}/peco.incl
 source ${LOCAL_PROFILES_DIR}/python.incl
 source ${LOCAL_PROFILES_DIR}/git.incl
 

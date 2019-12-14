@@ -9,6 +9,7 @@
 #  2: The file or dir in the ${LOCAL_CONFIG_DIR} folder
 # Globals:
 #  LOCAL_CONFIG_DIR
+
 replace_with_symlink()
 {
     #does the target actually exist?
@@ -29,18 +30,20 @@ replace_with_symlink()
         fi
     fi
 }
-
 if uname -a | grep -iq "ubuntu" ; then
     replace_with_symlink ~/.config/terminator/config terminator
-    replace_with_symlink ~/.fluxbox fluxbox
     replace_with_symlink ~/.config/awesome awesome
     replace_with_symlink ~/.config/i3 i3
     replace_with_symlink ~/.config/rofi rofi
     replace_with_symlink ~/.config/polybar polybar
-    replace_with_symlink ~/.screenrc screenrc
-    replace_with_symlink ~/.Xdefaults Xdefaults
-    # some require it to be called .Xresources instead
-    replace_with_symlink ~/.Xresources Xdefaults
-    replace_with_symlink ~/.Xmodmap Xmodmap
+elif uname -a | grep -iq "manjaro" ; then
+    replace_with_symlink ~/.i3 i3
+    replace_with_symlink ~/.i3status.conf i3status.conf
 fi
-# TODO: move the other distro settings in here too
+replace_with_symlink ~/.fluxbox fluxbox
+replace_with_symlink ~/.screenrc screenrc
+replace_with_symlink ~/.Xdefaults Xdefaults
+# some require it to be called .Xresources instead
+replace_with_symlink ~/.Xresources Xdefaults
+replace_with_symlink ~/.Xmodmap Xmodmap
+replace_with_symlink ~/.config/peco/config.json peco.json
