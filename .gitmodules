@@ -4,3 +4,9 @@
 [submodule "tools/zsh-peco-history"]
 	path = tools/zsh-peco-history
 	url = https://github.com/jimeh/zsh-peco-history.git
+[submodule "tools/fzf-fasd"]
+	path = tools/fzf-fasd
+	url = https://github.com/wookayin/fzf-fasd
+[submodule "tools/up.zsh"]
+	path = tools/up.zsh
+	url = https://github.com/peterhurford/up.zsh
