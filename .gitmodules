@@ -1,12 +1,3 @@
-[submodule "tools/zsh-bd"]
-	path = tools/zsh-bd
-	url = https://github.com/Tarrasch/zsh-bd
-[submodule "tools/zsh-peco-history"]
-	path = tools/zsh-peco-history
-	url = https://github.com/jimeh/zsh-peco-history.git
-[submodule "tools/fzf-fasd"]
-	path = tools/fzf-fasd
-	url = https://github.com/wookayin/fzf-fasd
-[submodule "tools/up.zsh"]
-	path = tools/up.zsh
-	url = https://github.com/peterhurford/up.zsh
+[submodule "tools/zplug"]
+	path = tools/zplug
+	url = https://github.com/zplug/zplug

@@ -1,0 +1,22 @@
+# zplug
+export ZPLUG_HOME=${LOCAL_PROFILES_DIR}/tools/zplug
+source ${ZPLUG_HOME}/init.zsh
+
+# a tool for other tools to run asynchronous commands
+zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
+
+#fzf-fasd, allows selection of tab completion of the "z" command
+zplug "wookayin/fzf-fasd"
+
+# bd command for going up to a specific directory
+zplug "Tarrasch/zsh-bd", from:"github", use:"bd.zsh"
+
+#up command
+zplug "peterhurford/up.zsh"
+
+# peco history search
+# command-line options to peco when called
+export ZSH_PECO_HISTORY_OPTS="--layout=bottom-up --initial-filter=SmartCase --select-1"
+# set to non-zero to dedup history before sending to peco
+export ZSH_PECO_HISTORY_DEDUP=1
+zplug "jimeh/zsh-peco-history", defer:2
