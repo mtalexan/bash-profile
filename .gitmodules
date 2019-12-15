@@ -1,3 +1,3 @@
-[submodule "tools/zplug"]
-	path = tools/zplug
+[submodule "tools/zplug-plugins/zplug"]
+	path = tools/zplug-plugins/zplug
 	url = https://github.com/zplug/zplug
