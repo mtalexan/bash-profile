@@ -50,7 +50,7 @@ zstyle ':zaw:git-recent-all-branches' default zaw-callback-append-to-buffer
 zstyle ':zaw:git-recent-branches' default zaw-callback-append-to-buffer
 zstyle ':zaw:git-log' default zaw-callback-append-to-buffer
 zstyle ':zaw:git-reflog' default zaw-callback-append-to-buffer
-zstyle ':zaw:git-status' default zaw-callback-append-to-buffer
+#zstyle ':zaw:git-status' default zaw-callback-append-to-buffer # apparently not possible
 zstyle ':zaw:process' default zaw-callback-append-to-buffer
 zstyle ':zaw:fasd' default zaw-callback-append-to-buffer
 zstyle ':zaw:fasd-directories' default zaw-callback-append-to-buffer
