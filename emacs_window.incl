@@ -45,11 +45,11 @@ window_mode()
     # we're using this in our sudo alias to make sure we don't try opening a client to our daemon when sudoing
     export SUDOEDITOR="emacs"
     export GIT_EDITOR="emacs"
-    export EDITOR="emacs "
+    export EDITOR="emacs"
     if ! do_define_daemon_aliases ; then
-        export VISUAL="emacs "
+        export VISUAL="emacs"
     else
-        export VISUAL="emacss "
+        export VISUAL="emacss"
         # Server, but acting like normal emacs running in the foreground
         alias emacss='emacss_startup -c '
         # Server, running in the background, in a new window
@@ -59,4 +59,9 @@ window_mode()
     fi
 }
 
-window_mode
+# check if X11 forwarding is setup with remote sessions
+if is_headless_session ; then
+    nowindow_mode
+else
+    window_mode
+fi

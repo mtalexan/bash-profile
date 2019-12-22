@@ -1,3 +1,7 @@
+if ! command -v gawk &>/dev/null ; then
+   echo "ERROR: need to install gawk for zplug to work without producing \"Unknown Error\" for each repo"
+fi
+
 # zplug
 export ZPLUG_HOME=${LOCAL_PROFILES_DIR}/tools/zplug-plugins
 source ${ZPLUG_HOME}/zplug/init.zsh

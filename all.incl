@@ -20,11 +20,26 @@ fi
 
 ##################################################################################
 
+is_headless_session()
+{
+    # if DISPLAY is set we're not headless
+    if [ -z "${DISPLAY}" ] ; then
+        # headless local session
+        return 0
+    else
+        # local session with an attached display
+        return 1
+    fi
+}
+export -f is_headless_session
+
 # This must be done first so prompts always use the right colors
 if uname -a | grep -iq "ubuntu" ; then
-    #force parsing of the correct .Xdefaults file since Ubuntu apparently
-    #dislikes doing it
-    xrdb ${HOME}/.Xdefaults
+   if ! is_headless_session ; then
+       #force parsing of the correct .Xdefaults file since Ubuntu apparently
+       #dislikes doing it
+       xrdb ${HOME}/.Xdefaults
+   fi
 fi
 
 
