@@ -9,11 +9,20 @@ source ${ZPLUG_HOME}/zplug/init.zsh
 # let zplug manage itself
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
+# Grab binaries from GitHub Releases
+# and rename with the "rename-to:" tag
+zplug "junegunn/fzf-bin", \
+    from:gh-r, \
+    as:command, \
+    rename-to:fzf, \
+    use:"*amd64*"
+
+# Support oh-my-zsh plugins and prezto plugins
+zplug "plugins/git",   from:oh-my-zsh
+zplug "modules/prompt", from:prezto
+
 # a tool for other tools to run asynchronous commands
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
-
-#fzf-fasd, allows selection of tab completion of the "z" command
-zplug "wookayin/fzf-fasd"
 
 # bd command for going up to a specific directory
 zplug "Tarrasch/zsh-bd", from:"github", use:"bd.zsh"
@@ -25,11 +34,14 @@ zplug "peterhurford/up.zsh"
 #Key bound to Ctrl+f
 export FZF_DEFAULT_OPTS='--layout=default --bind="alt-bs:backward-kill-word,alt-j:backward-char,alt-l:forward-char,alt-i:up,alt-k:down,ctrl-j:backward-word,ctrl-l:forward-word,ctrl-i:page-up,ctrl-k:page-down,ctrl-g:cancel,alt-u:beginning-of-line,alt-o:end-of-line,ctrl-n:next-history,ctrl-p:previous-history,ctrl-]:jump,alt-space:toggle-in,ctrl-space:toggle-in" --multi'
 zplug "seletskiy/zsh-fuzzy-search-and-edit"
+zstyle ':fuzzy-search-and-edit:editor' use-visual yes
 
 # forgit, an interactive git plugin
 # uses the FZF_DEFAULT_OPTS also
-zplug 'wfxr/forgit'
+#zplug 'wfxr/forgit'
 
+#fzf-fasd, allows selection of tab completion of the "z" command
+zplug "wookayin/fzf-fasd"
 
 # zaw
 # history bound to Ctrl+r
