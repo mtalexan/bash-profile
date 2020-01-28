@@ -103,7 +103,6 @@ elif [ -n "$BASH" ] ; then
   source ${LOCAL_PROFILES_DIR}/generic.bash
 fi
 
-source ${LOCAL_PROFILES_DIR}/peco.incl
 source ${LOCAL_PROFILES_DIR}/python.incl
 source ${LOCAL_PROFILES_DIR}/git.incl
 
