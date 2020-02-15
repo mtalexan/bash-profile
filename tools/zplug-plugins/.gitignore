@@ -2,6 +2,6 @@
 /log
 /bin
 /cache
-/zcompdump
+/zcompdump*
 /init.zsh
 
