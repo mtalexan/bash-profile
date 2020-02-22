@@ -39,6 +39,8 @@ if uname -a | grep -iq "ubuntu" ; then
 elif uname -a | grep -iq "manjaro" ; then
     replace_with_symlink ~/.i3 i3
     replace_with_symlink ~/.i3status.conf i3status.conf
+    replace_with_symlink ~/.config/morc_menu/morc_menu_v1.conf morc_menu_v1.conf
+    replace_with_symlink ~/.config/copyq/dunstrc dunstrc
 fi
 replace_with_symlink ~/.fluxbox fluxbox
 replace_with_symlink ~/.screenrc screenrc
@@ -47,3 +49,10 @@ replace_with_symlink ~/.Xdefaults Xdefaults
 replace_with_symlink ~/.Xresources Xdefaults
 replace_with_symlink ~/.Xmodmap Xmodmap
 replace_with_symlink ~/.config/peco/config.json peco.json
+
+replace_with_symlink ~/.config/copyq/copyq-commands.ini copyq/copyq-commands.ini
+replace_with_symlink ~/.config/copyq/copyq-bak.conf copyq/copyq-bak.conf
+replace_with_symlink ~/.config/copyq/copyq.conf copyq/copyq.conf
+replace_with_symlink ~/.config/copyq/copyq-filter.ini copyq/copyq-filter.ini
+replace_with_symlink ~/.config/copyq/copyq_geometry.ini copyq/copyq_geometry.ini
+replace_with_symlink ~/.config/copyq/copyq_tabs.ini copyq/copyq_tabs.ini
