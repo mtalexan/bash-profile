@@ -56,3 +56,6 @@ replace_with_symlink ~/.config/copyq/copyq.conf copyq/copyq.conf
 replace_with_symlink ~/.config/copyq/copyq-filter.ini copyq/copyq-filter.ini
 replace_with_symlink ~/.config/copyq/copyq_geometry.ini copyq/copyq_geometry.ini
 replace_with_symlink ~/.config/copyq/copyq_tabs.ini copyq/copyq_tabs.ini
+
+replace_with_symlink ~/.pekwm pekwm
+
