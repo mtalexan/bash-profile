@@ -14,7 +14,7 @@
 #export EMACS_USE_DAEMON=true
 
 # Optionally use prezto instead of antigen
-# export USE_PREZTO=true
+export USE_PREZTO=true
 # be sure to run the prezto installer if you pick this option
 
 export MY_TOOLS_DIR=${HOME}/my-tools

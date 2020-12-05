@@ -13,6 +13,21 @@ elif ! git -C ${HOME}/.zprezto submodule update --init --recursive ; then
     exit 1
 fi
 
+# the chauncey-garret maintainer of the garrett prompt no longer guarantees his custom prompt is integrated,
+# so check to see if it needs to be added manually
+if ! [ -d ${HOME}/.zprezto/modules/prompt/external/garrett ] ; then
+    if ! git -C ${HOME}/.zprezto submodule add https://github.com/chauncey-garrett/zsh-prompt-garrett.git modules/prompt/external/garrett ; then
+        echo "ERROR during cloning of garrett prompt submodule"
+        exit 1
+    fi
+fi
+if ! [ -e ${HOME}/.zprezto/modules/prompt/functions/prompt_garrett_setup ] ; then
+    if ! ln -sr ${HOME}/.zprezto/modules/prompt/external/garrett/prompt_garrett_setup ${HOME}/.zprezto/modules/prompt/functions/prompt_garrett_setup ; then
+        echo "ERROR during symlinking of garrett prompt setup script"
+        exit 1
+    fi
+fi
+
 # Copy the template if we don't have one already
 if [ -e ${HOME}/.zshrc ] ; then
     echo "~/.zshrc already exists, skipping"
