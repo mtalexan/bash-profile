@@ -44,9 +44,14 @@ elif uname -a | grep -iq "manjaro" ; then
 fi
 replace_with_symlink ~/.fluxbox fluxbox
 replace_with_symlink ~/.screenrc screenrc
+# .Xdefaults is the old name
 replace_with_symlink ~/.Xdefaults Xdefaults
-# some require it to be called .Xresources instead
-replace_with_symlink ~/.Xresources Xdefaults
+# .Xresources is the modern name
+replace_with_symlink ~/.Xresources Xdefault
+# Ubuntu requires the file to be called .Xresources-<hostname>
+if uname -a | grep -iq "ubuntu" ; then
+    replace_with_symlink ~/.Xresources-$(hostname) Xdefault
+fi
 replace_with_symlink ~/.Xmodmap Xmodmap
 replace_with_symlink ~/.config/peco/config.json peco.json
 
