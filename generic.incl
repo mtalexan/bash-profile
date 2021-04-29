@@ -96,3 +96,18 @@ if command -v fasd &>/dev/null ; then
     source "$fasd_cache"
     unset fasd_cache
 fi
+
+# VTE backend, which is used by gnome-shell and tilix, needs /etc/profile.d/vte.sh sourced
+# to allow PROMPT_COMMAND to be passed, which is used for passing information when opening
+# new terminals.  Ubuntu and Arch linux screwed up sourcing of scripts in /etc/profile.d/
+# for this, so we have to to it manually. Some systems (Fedora) did it properly though so
+# check to see if the script was already sourced by looking for the primary function it defines.
+if ! type __vte_prompt_command &> /dev/null ; then
+    # prefer properly named script without the version number in it, but fall back since Ubuntu
+    # screwed the naming up by adding a version number to it.
+    if [ -e /etc/profile.d/vte.sh ] ; then
+        source /etc/profile.d/vte.sh
+    elif [ -e /etc/profile.d/vte-2.91.sh ] ; then
+        source /etc/profile.d/vte-2.91.sh
+    fi
+fi
