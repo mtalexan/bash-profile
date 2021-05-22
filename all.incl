@@ -80,7 +80,7 @@ source ${LOCAL_PROFILES_DIR}/screen.incl
 # Is the gtags installation folder unspecified?
 if [ -z "${GTAGS_INSTALL_DIR}" ] ; then
     # is gtags installed on the system?
-    GTAGS_INSTALL_DIR=$(which gtags)
+    GTAGS_INSTALL_DIR=$(which gtags 2>/dev/null)
     if [ -n "${GTAGS_INSTALL_DIR}" ] ; then
         # drop the file name and the bin directory name
         export GTAGS_INSTALL_DIR=$(dirname $(dirname ${GTAGS_INSTALL_DIR}))
