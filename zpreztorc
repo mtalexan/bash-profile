@@ -146,7 +146,8 @@ zstyle ':prezto:module:pacman' frontend 'yay'
 
 # this comes from https://github.com/chauncey-garrett/zsh-prompt-garrett
 # It requires copying prompt_garrett_setup to .zprezto/modules/prompt/functions/ as well
-zstyle ':prezto:module:prompt' theme 'garrett'
+#zstyle ':prezto:module:prompt' theme 'garrett'
+zstyle ':prezto:module:prompt' theme 'powerlevel10k'
 
 # set the pwd type to 'short', 'long' (no ~ expansion), or 'full' (~ expansion)
 zstyle ':prezto:module:prompt' pwd-length 'long'

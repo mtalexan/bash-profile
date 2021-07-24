@@ -19,3 +19,10 @@ export USE_PREZTO=true
 
 export MY_TOOLS_DIR=${HOME}/my-tools
 source ${MY_TOOLS_DIR}/all.incl
+
+# Remove these lines entirely to be prompted for configuration of each part
+# of the prompt on startup, which will generate the config file and offer
+# to put these lines in for it. 
+#
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
