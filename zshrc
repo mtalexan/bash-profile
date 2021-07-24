@@ -25,4 +25,4 @@ source ${MY_TOOLS_DIR}/all.incl
 # to put these lines in for it. 
 #
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ ! -e ~/.p10k.zsh ]] || source ~/.p10k.zsh
