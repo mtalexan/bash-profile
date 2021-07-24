@@ -61,3 +61,6 @@ for F in zlogin zlogout zprofile zshenv ; do
 done
 
 # Garrett prompt is already integrated as an external theme
+
+# Config for powerlevel10k prompt needs to be symlinked
+ln -sr ${SCRIPT_DIR}/p10k_config.zsh ${HOME}/.p10k.zsh
