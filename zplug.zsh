@@ -19,44 +19,45 @@ else
     # WARNING WARNING WARNING WARNING WARNING WARNING
     ###################################################
 
-
     # let zplug manage itself
-    zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+    zplug 'zplug/zplug', hook-build:'zplug --self-manage' || echo >&2 "ERROR: zplug setting 'zplug/zplug'"
 
     # This not only doesn't work, it corrupts all other plugins by wiping out everything else.
     ## Grab binaries from GitHub Releases
     #zplug "junegunn/fzf", \
     #    from:gh-r, \
     #    as:command, \
-    #    use:"*linux_amd64*"
+    #    use:"*linux_amd64*" \
+    # || echo >&2 "ERROR: zplug setting 'junegunn/fzf'"
 
     # Support oh-my-zsh plugins and prezto plugins
-    zplug "plugins/git",   from:oh-my-zsh
-    zplug "modules/prompt", from:prezto
+    zplug "plugins/git",   from:oh-my-zsh || echo >&2 "ERROR: zplug setting 'plugins/git'"
+    zplug "modules/prompt", from:prezto || echo >&2 "ERROR: zplug setting 'modules/prompt'"
 
     # Already included by modules/prompt,from:prezto.  Including it a second time causes an infinite hang
     # during loading.
     ## a tool for other tools to run asynchronous commands
-    #zplug "mafredri/zsh-async", from:"github", use:"async.zsh", lazy:true
+    #zplug "mafredri/zsh-async", from:"github", use:"async.zsh" || echo >&2 "ERROR: zplug setting 'mafredri/zsh-async'"
 
     # bd command for going up to a specific directory
-    zplug "Tarrasch/zsh-bd", from:"github", use:"bd.zsh"
+    zplug "Tarrasch/zsh-bd", from:"github", use:"bd.zsh", lazy:false || echo >&2 "ERROR: zplug setting 'Tarrasch/zsh-bd'"
 
     #up command
-    zplug "peterhurford/up.zsh", from:oh-my-zsh
+    zplug "peterhurford/up.zsh", lazy:false || echo >&2 "ERROR: zplug setting 'peterhurford/up.zsh'"
 
     # content search in directory with fuzzy match
     #Key bound to Ctrl+f
     export FZF_DEFAULT_OPTS='--layout=default --bind="alt-bs:backward-kill-word,alt-j:backward-char,alt-l:forward-char,alt-i:up,alt-k:down,ctrl-j:backward-word,ctrl-l:forward-word,ctrl-i:page-up,ctrl-k:page-down,ctrl-g:cancel,alt-u:beginning-of-line,alt-o:end-of-line,ctrl-n:next-history,ctrl-p:previous-history,ctrl-]:jump,alt-space:toggle-in,ctrl-space:toggle-in" --multi'
-    zplug "seletskiy/zsh-fuzzy-search-and-edit", lazy:false
+
+    zplug "seletskiy/zsh-fuzzy-search-and-edit", lazy:false || echo >&2 "ERROR: zplug setting 'seletskiy/zsh-fuzzy-search-and-edit'"
     zstyle ':fuzzy-search-and-edit:editor' use-visual yes
 
     # forgit, an interactive git plugin
     # uses the FZF_DEFAULT_OPTS also
-    #zplug 'wfxr/forgit'
+    #zplug 'wfxr/forgit' || echo >&2 "ERROR: zplug setting 'wfxr/forgit'"
 
     #fzf-fasd, allows selection of tab completion of the "z" command
-    zplug "wookayin/fzf-fasd", lazy:false
+    zplug "wookayin/fzf-fasd", lazy:false || echo >&2 "ERROR: zplug setting 'wookayin/fzf-fasd'"
 
     # zaw
     # history bound to Ctrl+r
@@ -65,7 +66,7 @@ else
     # fasd to Alt+h
     # prompt for backend first is Ctrl+t
     # This tries to load lazily if we don't explicitly tell it not to.  But we need it to be loaded for the keybindings to work or trigger it
-    zplug "zsh-users/zaw", lazy:false
+    zplug "zsh-users/zaw", lazy:false || echo >&2 "ERROR: zplug setting 'zsh-users/zaw'"
     # also see keys.config for some zaw-specific keybindings and plugin checking
 
         # limit zaw to 7 lines
@@ -96,25 +97,20 @@ else
     #export ZSH_PECO_HISTORY_OPTS="--layout=bottom-up --initial-filter=SmartCase --select-1"
     ## set to non-zero to dedup history before sending to peco
     #export ZSH_PECO_HISTORY_DEDUP=1
-    #zplug "jimeh/zsh-peco-history", defer:2
+    #zplug "jimeh/zsh-peco-history", defer:2 || echo >&2 "ERROR: zplug setting 'jimeh/zsh-peco-history'"
 
     show_verbose=""
     # put this after all zplug definitions to auto install on startup
     if ! zplug check ; then
         # auto-install the plugins that are needed
-        zplug install
-        if [ $? -ne 0 ]; then
-            echo >&2 "Error installing zplug plugins!"
-        fi
+        zplug install || echo >&2 "ERROR: installing zplug plugins!"
+
         echo "Zplug is self-managing so it can take a very long time to load the first time after install (30+ seconds)."
         # set this so we show the real-time loading
         show_verbose="--verbose"
     fi
 
     # add --verbose for debugging. Must be last
-    zplug load ${show_verbose}
-    if [ $? -ne 0 ] ; then
-        echo >&2 "ERROR loading zplug plugins!"
-    fi
+    zplug load ${show_verbose} || echo >&2 "ERROR loading zplug plugins!"
     unset show_verbose
 fi
