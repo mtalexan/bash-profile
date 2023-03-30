@@ -1,0 +1,94 @@
+if ! command -v gawk &>/dev/null ; then
+   echo >&2 "ERROR: need to install gawk for zplug to work without producing \"Unknown Error\" for each repo"
+else
+    # zplug
+    export ZPLUG_HOME="${LOCAL_PROFILES_DIR}/tools/zplug-plugins"
+    source "${ZPLUG_HOME}/zplug/init.zsh"
+
+    # let zplug manage itself
+    zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+
+    # Grab binaries from GitHub Releases
+    # and rename with the "rename-to:" tag
+    zplug "junegunn/fzf-bin", \
+        from:gh-r, \
+        as:command, \
+        rename-to:fzf, \
+        use:"*amd64*"
+
+    # Support oh-my-zsh plugins and prezto plugins
+    zplug "plugins/git",   from:oh-my-zsh
+    zplug "modules/prompt", from:prezto
+
+    # a tool for other tools to run asynchronous commands
+    zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
+
+    # bd command for going up to a specific directory
+    zplug "Tarrasch/zsh-bd", from:"github", use:"bd.zsh"
+
+    #up command
+    zplug "peterhurford/up.zsh"
+
+    # content search in directory with fuzzy match
+    #Key bound to Ctrl+f
+    export FZF_DEFAULT_OPTS='--layout=default --bind="alt-bs:backward-kill-word,alt-j:backward-char,alt-l:forward-char,alt-i:up,alt-k:down,ctrl-j:backward-word,ctrl-l:forward-word,ctrl-i:page-up,ctrl-k:page-down,ctrl-g:cancel,alt-u:beginning-of-line,alt-o:end-of-line,ctrl-n:next-history,ctrl-p:previous-history,ctrl-]:jump,alt-space:toggle-in,ctrl-space:toggle-in" --multi'
+    zplug "seletskiy/zsh-fuzzy-search-and-edit"
+    zstyle ':fuzzy-search-and-edit:editor' use-visual yes
+
+    # forgit, an interactive git plugin
+    # uses the FZF_DEFAULT_OPTS also
+    #zplug 'wfxr/forgit'
+
+    #fzf-fasd, allows selection of tab completion of the "z" command
+    zplug "wookayin/fzf-fasd"
+
+    # zaw
+    # history bound to Ctrl+r
+    # git-branch to Alt+g b
+    # git-log to Alt+g l
+    # fasd to Alt+h
+    # prompt for backend first is Ctrl+t
+    zplug "zsh-users/zaw"
+    # keybindings, in the keys.incl, may fail the first time this plugin is installed
+
+        # limit zaw to 5 lines
+        zstyle ':filter-select' max-lines 5
+        # advanced start/end of line matching and NOT syntax
+        zstyle ':filter-select' extended-search yes
+        zstyle ':filter-select' hist-find-no-dups yes
+        #zstyle ':filter-select' escape-descriptions yes # literal newlines and not \n
+
+        # set default and alt actions for different widget types
+        zstyle ':zaw:git-files' default zaw-callback-append-to-buffer
+        zstyle ':zaw:git-files' alt zaw-callback-edit-file
+        zstyle ':zaw:git-files-legacy' default zaw-callback-append-to-buffer
+        zstyle ':zaw:git-files-legacy' alt zaw-callback-edit-file
+        zstyle ':zaw:git-branches' default zaw-callback-append-to-buffer
+        zstyle ':zaw:git-recent-all-branches' default zaw-callback-append-to-buffer
+        zstyle ':zaw:git-recent-branches' default zaw-callback-append-to-buffer
+        zstyle ':zaw:git-log' default zaw-callback-append-to-buffer
+        zstyle ':zaw:git-reflog' default zaw-callback-append-to-buffer
+        #zstyle ':zaw:git-status' default zaw-callback-append-to-buffer # apparently not possible
+        zstyle ':zaw:process' default zaw-callback-append-to-buffer
+        zstyle ':zaw:fasd' default zaw-callback-append-to-buffer
+        zstyle ':zaw:fasd-directories' default zaw-callback-append-to-buffer
+        zstyle ':zaw:fasd-files' default zaw-callback-append-to-buffer
+
+    # peco history search (zaw is better)
+    # command-line options to peco when called
+    #export ZSH_PECO_HISTORY_OPTS="--layout=bottom-up --initial-filter=SmartCase --select-1"
+    ## set to non-zero to dedup history before sending to peco
+    #export ZSH_PECO_HISTORY_DEDUP=1
+    #zplug "jimeh/zsh-peco-history", defer:2
+
+
+    # put this after all zplug definitions to auto install on startup
+    if ! zplug check ; then
+        # auto-install the plugins that are needed
+        zplug install
+        echo >&2 "Large list of installs may cause lockup and require re-opening terminal"
+    fi
+
+    # add verbose for debugging, must be last
+    zplug load verbose
+fi

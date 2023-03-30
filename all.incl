@@ -3,116 +3,115 @@
 # This file should be included in the .bashrc at the end of the file.
 #
 # Arguments:
-#  MY_TOOLS_DIR : The path to the directory this repo is in
+#  MY_TOOLS_DIR: The path to the directory this repo is in
+#  SUPPORT_REMOTE: if set non-blank and 'screen' is installed, all shell sessions are opened in a screen session.
+#  USE_EMACS: Should emacs be setup as the default editor?
+#  USE_GTAGS: Use gtags along with emacs?  Ignored unless USE_EMACS is also set
+#  GTAGS_INSTALL_DIR: directory gtags is already installed in. If not set, it will be searched for and set
+#  CURSOR_TYPE: 'block', 'block_blink', 'underline', 'underline_blink', 'bar', 'bar_blink' to set it.
+#               This may not stick if commands use advanced shell ascii to mess with the cursor themselves.
+#  ~/.dircolors: If present and dircolors is installed, it will be loaded automatically
+#  color_prompt: set by most default .bashrc files automatically, sets whether fallback bash PS1 should use color
+#  use_color: set by manjaro default .bashrc, sets to a command that evaluates true/false for whether color should be used in PS1
+# Globals (automatic):
+#  ZSH_NAME: set automatically if in a zshell session
+#  BASH: set automatically if in a bash shell
+#  DISPLAY: set automatically by X11
+#  HOME: path to user's home folder
+#  EUID: the effective user's UID (gets modified by 'sudo' unlike UID)
+# Globals (configured):
+#  PATH : system path
+#  EDITOR: default editor to use
+#  VISUAL: default editor to use for GUI systems (not everything obeys this)
+#  GIT_EDITOR: default editor for git to use
+#  SUDOEDITOR: default editor when running visudo
+#  GTAGS_INSTALL_DIR: Directory gtags is installed in if gtags is enabled and already installed.
+#  GTAGSLABEL: set to 'native' if gtags is enabled
+#  GTAGSCONF: path to gtags config directory within GTAGS_INSTALL_DIR if gtags is enabled
+#  ZPLUG_HOME: path to the zplug plugins (if zsh is used)
+#  FZF_DEFAULT_OPTS: sets config for fzf tool (if present)
 
-#arguments to sub-files
-export LOCAL_PROFILES_DIR=${MY_TOOLS_DIR}/profile
-export LOCAL_REPOS_DIR=${MY_TOOLS_DIR}/repos
-export LOCAL_CONFIG_DIR=${MY_TOOLS_DIR}/config
+if [ -z "${MY_TOOLS_DIR}" ]; then
+    echo >&2 "Must set MY_TOOLS_DIR for shell to load extra settings"
+else
+    #arguments to sub-files
+    export LOCAL_PROFILES_DIR="${MY_TOOLS_DIR}/profile"
+    export LOCAL_REPOS_DIR="${MY_TOOLS_DIR}/repos"
+    export LOCAL_CONFIG_DIR="${MY_TOOLS_DIR}/config"
 
-#extend the path to include our tools directories if they exist
-if [ -d ${MY_TOOLS_DIR}/scripts ] ; then
-    export PATH=${MY_TOOLS_DIR}/scripts:${PATH}
-fi
-if [ -d ${MY_TOOLS_DIR}/repos/tools ] ; then
-    export PATH=${MY_TOOLS_DIR}/repos/tools:${PATH}
-fi
-
-##################################################################################
-
-is_headless_session()
-{
-    # if DISPLAY is set we're not headless
-    if [ -z "${DISPLAY}" ] ; then
-        # headless local session
-        return 0
-    else
-        # local session with an attached display
-        return 1
+    #extend the path to include our tools directories if they exist
+    if [ -d "${MY_TOOLS_DIR}/scripts" ] ; then
+        export PATH="${MY_TOOLS_DIR}/scripts:${PATH}"
     fi
-}
-
-# This must be done first so prompts always use the right colors
-if uname -a | grep -iq "ubuntu" ; then
-   if ! is_headless_session ; then
-       #force parsing of the correct .Xdefaults file since Ubuntu apparently
-       #dislikes doing it
-       xrdb ${HOME}/.Xdefaults
-   fi
-fi
-
-
-if [ -n "$ZSH_NAME" ] ; then
-    # setup how completion should work in general, before antigen triggers it
-    source ${LOCAL_PROFILES_DIR}/zsh-completion-setup.zsh
-
-    if [ -n "$USE_PREZTO" ] ; then
-        # setup bash completion as well
-        source ${LOCAL_PROFILES_DIR}/zsh-completion-fixes.zsh
-        source ${LOCAL_PROFILES_DIR}/prezto-include.zsh
-    else
-    #if [ -n "$USE_ANTIGEN" ] ; then
-        source ${LOCAL_PROFILES_DIR}/antigen-include.zsh
-
-        # fixes things screwed up by oh-my-zsh and antigen
-        # this must be done before including anything that might provide bash-style completions
-        source ${LOCAL_PROFILES_DIR}/zsh-completion-fixes.zsh
+    if [ -d "${MY_TOOLS_DIR}/repos/tools" ] ; then
+        export PATH="${MY_TOOLS_DIR}/repos/tools:${PATH}"
     fi
-fi
 
-source ${LOCAL_PROFILES_DIR}/sudo.incl
+    ##################################################################################
 
-# Temporary work around until it can be migrated to the right place everywhere
-if [ -n "${BASH}" ] && uname -a | grep -iq "ubuntu"  ; then
-    EMACS_USE_DAEMON=true
-fi
+    is_headless_session()
+    {
+        # if DISPLAY is set we're not headless
+        if [ -z "${DISPLAY}" ] ; then
+            # headless local session
+            return 0
+        else
+            # local session with an attached display
+            return 1
+        fi
+    }
+    export -f is_headless_session
 
-# look for EMACS_USE_DAEMON=true to determine if we should use our custom written daemon aliases
-if [ -n "${EMACS_USE_DAEMON}" ] && ${EMACS_USE_DAEMON} ; then
-    source ${LOCAL_PROFILES_DIR}/emacs_daemon.incl
-fi
-
-# must come after possible emacs_daemon
-source ${LOCAL_PROFILES_DIR}/emacs_window.incl
-# must come after emacs_window
-source ${LOCAL_PROFILES_DIR}/screen.incl
-
-# Is the gtags installation folder unspecified?
-if [ -z "${GTAGS_INSTALL_DIR}" ] ; then
-    # is gtags installed on the system?
-    GTAGS_INSTALL_DIR=$(which gtags 2>/dev/null)
-    if [ -n "${GTAGS_INSTALL_DIR}" ] ; then
-        # drop the file name and the bin directory name
-        export GTAGS_INSTALL_DIR=$(dirname $(dirname ${GTAGS_INSTALL_DIR}))
-    else
-        unset GTAGS_INSTALL_DIR
+    # This must be done first so prompts always use the right colors
+    if uname -a | grep -iq "ubuntu" ; then
+        if ! is_headless_session  && [ -f "${HOME}/.Xdefaults" ]; then
+            #force parsing of the correct .Xdefaults file since Ubuntu apparently
+            #dislikes doing it
+            xrdb "${HOME}/.Xdefaults"
+        fi
     fi
-fi
-# do we have a version of gtags we can use?
-if [ -n "${GTAGS_INSTALL_DIR}" ] ; then
-    source ${LOCAL_PROFILES_DIR}/emacs_gtags.incl
-fi
 
-source ${LOCAL_PROFILES_DIR}/repos.incl
-source ${LOCAL_PROFILES_DIR}/altera.incl
 
-source ${LOCAL_PROFILES_DIR}/generic.incl
-if [ -n "$ZSH_NAME" ]  ; then
-  source ${LOCAL_PROFILES_DIR}/generic.zsh
-elif [ -n "$BASH" ] ; then
-  source ${LOCAL_PROFILES_DIR}/generic.bash
-fi
+    if [ -n "${ZSH_NAME}" ] ; then
+        # setup how completion should work
+        source "${LOCAL_PROFILES_DIR}/zsh-completion-pre.zsh"
+        # include the prezto config
+        source "${LOCAL_PROFILES_DIR}/prezto-include.zsh"
+    fi
 
-source ${LOCAL_PROFILES_DIR}/python.incl
-source ${LOCAL_PROFILES_DIR}/git.incl
+    # setup variables for use by sudo
+    source "${LOCAL_PROFILES_DIR}/sudo.incl"
 
-if [ -n "$BASH" ] ; then
-  source ${LOCAL_PROFILES_DIR}/alias_completion.bash
-fi
+    if [ -n "${USE_EMACS}" ] && command -v emacs &>/dev/null; then
+        source "${LOCAL_PROFILES_DIR}/emacs.incl"
+    fi
 
-source ${LOCAL_PROFILES_DIR}/configs.incl
+    if [ -n "${SUPPORT_REMOTE}" ] && command -v screen &>/dev/null ; then
+        # must come after ${editor}_window.incl
+        source "${LOCAL_PROFILES_DIR}/screen.incl"
+    fi
 
-if [ -n "$ZSH_NAME" ] ; then
-    # adds navigation key bindings that override oh-my-zsh
-    source ${LOCAL_PROFILES_DIR}/keys.config
-fi
+    source "${LOCAL_PROFILES_DIR}/generic.incl"
+    if [ -n "$ZSH_NAME" ]  ; then
+        source "${LOCAL_PROFILES_DIR}/generic.zsh"
+    elif [ -n "$BASH" ] ; then
+        source "${LOCAL_PROFILES_DIR}/generic.bash"
+    fi
+
+    # must come after (conditional) generic.bash since it will add
+    # git_prompt to the PS1 for bash.
+    source "${LOCAL_PROFILES_DIR}/git.incl"
+
+    if [ -n "$BASH" ] ; then
+        source "${LOCAL_PROFILES_DIR}/alias_completion.bash"
+    fi
+
+    source "${LOCAL_PROFILES_DIR}/configs.incl"
+
+    if [ -n "$ZSH_NAME" ] ; then
+        # needs to come after the zsh manager (prezto, antigen, oh-my-zsh) and after bash completions
+        source "${LOCAL_PROFILES_DIR}/zsh-completion-post.zsh"
+        # adds navigation key bindings that override oh-my-zsh
+        source "${LOCAL_PROFILES_DIR}/keys.config"
+    fi
+fi # end else of if -z $MY_TOOLS_DIR

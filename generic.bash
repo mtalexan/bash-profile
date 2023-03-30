@@ -12,25 +12,13 @@ HISTCONTROL=ignoredups:ignorespace
 HISTSIZE=100000
 HISTFILESIZE=200000
 
-# append to the history file, don't overwrite it
+# append to the history file, don't overwrite it.
 shopt -s histappend
 
 if uname -a | grep -iq "ubuntu" ; then
-    source ${LOCAL_PROFILES_DIR}/prompt-ubuntu.bash
+    source "${LOCAL_PROFILES_DIR}/prompt-ubuntu.bash"
 else
-    source ${LOCAL_PROFILES_DIR}/prompt-manjaro.bash
-fi
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto '
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto '
-    alias fgrep='fgrep --color=auto '
-    alias egrep='egrep --color=auto '
+    source "${LOCAL_PROFILES_DIR}/prompt-manjaro.bash"
 fi
 
 

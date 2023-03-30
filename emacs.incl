@@ -1,0 +1,70 @@
+# Emacs functions related to how emacs and the editors are used.
+# Controls whether it opens in no-window mode or not.
+#
+# Arguments
+#  USE_GTAGS: Use gtags along with emacs?
+#  GTAGS_INSTALL_DIR: directory gtags is already installed in. If not set, it will be searched for and set
+# Globals (used):
+#  is_headless_session: function detecting headless vs non-headless sessions
+# Globals (set):
+#  nowindow_mode_editor: function to set environment variables for the editor
+#  window_mode_editor: function to set environment variables for the editor
+#  GTAGS_INSTALL_DIR: Directory gtags is installed in if gtags is enabled and already installed.
+#  GTAGSLABEL: set to 'native' if gtags is enabled
+#  GTAGSCONF: path to gtags config directory within GTAGS_INSTALL_DIR if gtags is enabled
+
+
+##############################################################################
+# User defined "alias" commands for x11 port forwarding when SSHing in, then
+# starting or joining a screen session where x11 port forwarding is wanted
+#
+
+# Function that just swaps most editor values for the no-window equivalent
+nowindow_mode_editor()
+{
+    export SUDOEDITOR="emacs -nw"
+    export GIT_EDITOR="emacs -nw"
+    export EDITOR="emacs -nw"
+    export VISUAL=
+}
+export -f nowindow_mode_editor
+
+window_mode_editor()
+{
+    # we're using this in our sudo alias to make sure we don't try opening a client to our daemon when sudoing
+    export SUDOEDITOR="emacs"
+    export GIT_EDITOR="emacs"
+    export EDITOR="emacs"
+    export VISUAL="emacs"
+}
+export -f window_mode_editor
+
+# check if X11 forwarding is setup with remote sessions
+if is_headless_session ; then
+    nowindow_mode_editor
+else
+    window_mode_editor
+fi
+
+
+if [ -n "${USE_GTAGS}" ]; then
+    # Is the gtags installation folder unspecified?
+    if [ -z "${GTAGS_INSTALL_DIR}" ] ; then
+        # is gtags installed on the system?
+        GTAGS_INSTALL_DIR=$(which gtags 2>/dev/null)
+        if [ -n "${GTAGS_INSTALL_DIR}" ] ; then
+            # drop the file name and the bin directory name
+            GTAGS_INSTALL_DIR="$(dirname "$(dirname "${GTAGS_INSTALL_DIR}")")"
+            export GTAGS_INSTALL_DIR
+        else
+            unset GTAGS_INSTALL_DIR
+        fi
+    fi
+    # do we have a version of gtags we can use?
+    if [ -n "${GTAGS_INSTALL_DIR}" ] ; then
+        # Some environment settings for using GTAGS in emacs (with exuberant ctags backend)
+        export GTAGSCONF="${GTAGS_INSTALL_DIR}/share/gtags/gtags.conf"
+        export GTAGSLABEL="native"
+        export PATH="${PATH}:${GTAGS_INSTALL_DIR}/bin"
+    fi
+fi

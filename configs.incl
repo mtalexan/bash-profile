@@ -1,4 +1,6 @@
-# Guarantees configurations are stored in the repo-kept config directory
+# Guarantees configurations are stored in the repo-kept config directory.
+# Replaces things even if they aren't used so future installations will
+# make use of them automatically.
 #
 # Arguments:
 #  LOCAL_CONFIG_DIR : The directory where configurations are stored
@@ -9,58 +11,59 @@
 #  2: The file or dir in the ${LOCAL_CONFIG_DIR} folder
 # Globals:
 #  LOCAL_CONFIG_DIR
-
 replace_with_symlink()
 {
+    local target="$1"
+    local source="${LOCAL_CONFIG_DIR}/$2"
+
     #does the target actually exist?
-    if [ -z "$(readlink -e ${LOCAL_CONFIG_DIR}/$2)" ] ; then
+    if [ -z "$(readlink -e "${source}")" ] ; then
         return 0
     fi
 
-    # does the directory of what we want to replace exist?
-    if [ ! -e $1 ] ; then
-        mkdir -p $(dirname $1)
-    fi
+    # make sure the target directory exists
+    mkdir -p "$(dirname "${target}")"
+
     # Does the link already match what we want it to?
-    if [ "$(readlink -m ${LOCAL_CONFIG_DIR}/$2)" != "$(readlink -m $1)" ] ; then
-        #make sure we're not replacing a file with a symlink to a dir, or visa versa
-        if [ ! -e $1 ] || [ "$(file $1 | awk -F: '{print $2}')" == "$(file ${LOCAL_CONFIG_DIR}/$2 | awk -F: '{print $2}')" ] ; then
-            rm -rf $1
-            ln -s $(readlink -m ${LOCAL_CONFIG_DIR}/$2) $(readlink -m $1)
+    if [ "$(readlink -m "${source}")" != "$(readlink -m "${target}")" ] ; then
+        # if the file doesn't exist or the type of what we're replacing is the same as what we're replacing it with
+        if [ ! -e "${target}" ] || [ "$(file "${target}" | cut -d ' ' -f2)" == "$(file "${source}" | cut -d ' ' -f2)" ] ; then
+            rm -rf "${target}"
+            ln -s "$(readlink -m "${source}")" "$(readlink -m "${target}")"
         fi
     fi
 }
-if uname -a | grep -iq "ubuntu" ; then
-    replace_with_symlink ~/.config/terminator/config terminator
-    replace_with_symlink ~/.config/awesome awesome
-    replace_with_symlink ~/.config/i3 i3
-    replace_with_symlink ~/.config/rofi rofi
-    replace_with_symlink ~/.config/polybar polybar
-elif uname -a | grep -iq "manjaro" ; then
-    replace_with_symlink ~/.i3 i3
-    replace_with_symlink ~/.i3status.conf i3status.conf
-    replace_with_symlink ~/.config/morc_menu/morc_menu_v1.conf morc_menu_v1.conf
-    replace_with_symlink ~/.config/copyq/dunstrc dunstrc
-fi
-replace_with_symlink ~/.fluxbox fluxbox
-replace_with_symlink ~/.screenrc screenrc
-# .Xdefaults is the old name
-replace_with_symlink ~/.Xdefaults Xdefaults
-# .Xresources is the modern name
-replace_with_symlink ~/.Xresources Xdefault
-# Ubuntu requires the file to be called .Xresources-<hostname>
-if uname -a | grep -iq "ubuntu" ; then
-    replace_with_symlink ~/.Xresources-$(hostname) Xdefault
-fi
-replace_with_symlink ~/.Xmodmap Xmodmap
-replace_with_symlink ~/.config/peco/config.json peco.json
 
-replace_with_symlink ~/.config/copyq/copyq-commands.ini copyq/copyq-commands.ini
-replace_with_symlink ~/.config/copyq/copyq-bak.conf copyq/copyq-bak.conf
-replace_with_symlink ~/.config/copyq/copyq.conf copyq/copyq.conf
-replace_with_symlink ~/.config/copyq/copyq-filter.ini copyq/copyq-filter.ini
-replace_with_symlink ~/.config/copyq/copyq_geometry.ini copyq/copyq_geometry.ini
-replace_with_symlink ~/.config/copyq/copyq_tabs.ini copyq/copyq_tabs.ini
+replace_with_symlink "${HOME}/.config/terminator/config" terminator
+replace_with_symlink "${HOME}/.config/awesome" awesome
+replace_with_symlink "${HOME}/.config/rofi" rofi
+replace_with_symlink "${HOME}/.config/polybar" polybar
+replace_with_symlink "${HOME}/.config/morc_menu/morc_menu_v1.conf" morc_menu_v1.conf
 
-replace_with_symlink ~/.pekwm pekwm
+# conflicting locations for .i3, so put it in both
+replace_with_symlink "${HOME}/.config/i3" i3
+replace_with_symlink "${HOME}/.i3" i3
+replace_with_symlink "${HOME}/.i3status.conf" i3status.conf
+
+replace_with_symlink "${HOME}/.fluxbox" fluxbox
+#replace_with_symlink "${HOME}/tmux.conf" tmux.conf
+replace_with_symlink "${HOME}/.screenrc" screenrc
+
+# .Xdefaults is the old name, .Xresources is the new name, and ubuntu needs it at .Xresources-<hostname>
+replace_with_symlink "${HOME}/.Xdefaults" Xdefaults
+replace_with_symlink "${HOME}/.Xresources" Xdefault
+replace_with_symlink "${HOME}/.Xresources-$(hostname)" Xdefault
+
+replace_with_symlink "${HOME}/.Xmodmap" Xmodmap
+replace_with_symlink "${HOME}/.config/peco/config.json" peco.json
+
+replace_with_symlink "${HOME}/.config/copyq/copyq-commands.ini" copyq/copyq-commands.ini
+replace_with_symlink "${HOME}/.config/copyq/copyq-bak.conf" copyq/copyq-bak.conf
+replace_with_symlink "${HOME}/.config/copyq/copyq.conf" copyq/copyq.conf
+replace_with_symlink "${HOME}/.config/copyq/copyq-filter.ini" copyq/copyq-filter.ini
+replace_with_symlink "${HOME}/.config/copyq/copyq_geometry.ini" copyq/copyq_geometry.ini
+replace_with_symlink "${HOME}/.config/copyq/copyq_tabs.ini" copyq/copyq_tabs.ini
+replace_with_symlink "${HOME}/.config/copyq/dunstrc" dunstrc
+
+replace_with_symlink "${HOME}/.pekwm" pekwm
 

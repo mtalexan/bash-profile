@@ -1,12 +1,19 @@
 # Basic settings for SUDO.
 # No arguments required
 
+# Use neovim
+#if false >/dev/null; then
+if command -v nvim &>/dev/null; then
+    export SUDOEDITOR="nvim"
+fi
+if false >/dev/null; then
+#if command -v emacs &>/dev/null; then
+    # If we don't do this, sudo will reset the PATH and it won't correctly
+    # find emacs or some of the locally installed stuff.  Use \$PATH in this
+    # so the $PATH doesn't get processed until the sudo alias is actually
+    # invoked rather than being replaced here immediately
+    #alias sudo="sudo PATH=\"\$PATH\" "
 
-# If we don't do this, sudo will reset the PATH and it won't correctly
-# find emacs or some of the locally installed stuff.  Use \$PATH in this
-# so the $PATH doesn't get processed until the sudo alias is actually
-# invoked rather than being replaced here immediately
-#alias sudo="sudo PATH=\"\$PATH\" "
-
-# we're using this in our sudo alias to make sure we don't try opening a client to our daemon when sudoing
-export SUDOEDITOR="emacs"
+    # we're using this in our sudo alias to make sure we don't try opening a client to our daemon when sudoing
+    export SUDOEDITOR="emacs"
+fi

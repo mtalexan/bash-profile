@@ -4,4 +4,4 @@ setopt appendhistory extendedglob nomatch notify complete_aliases listambiguous 
 unsetopt autocd
 
 # load the zplugins
-source ${LOCAL_PROFILES_DIR}/zplug.incl
+source "${LOCAL_PROFILES_DIR}/zplug.zsh"

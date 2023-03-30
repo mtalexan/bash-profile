@@ -4,13 +4,31 @@
 stty -ixon
 
 # Set the cursor type
-#echo -e -n "\x1b[\x30 q" # changes to blinking block
-#echo -e -n "\x1b[\x31 q" # changes to blinking block also
-#echo -e -n "\x1b[\x32 q" # changes to steady block
-#echo -e -n "\x1b[\x33 q" # changes to blinking underline
-#echo -e -n "\x1b[\x34 q" # changes to steady underline
-#echo -e -n "\x1b[\x35 q" # changes to blinking bar
-#echo -e -n "\x1b[\x36 q" # changes to steady bar
+# TODO: add this to PS1
+case "${CURSOR_TYPE}" in
+    block_blink )
+        echo -e -n "\x1b[\x30 q" # changes to blinking block
+        #echo -e -n "\x1b[\x31 q" # changes to blinking block also
+        ;;
+    block )
+        echo -e -n "\x1b[\x32 q" # changes to steady block
+        ;;
+    underline_blink )
+        echo -e -n "\x1b[\x33 q" # changes to blinking underline
+        ;;
+    underline )
+        echo -e -n "\x1b[\x34 q" # changes to steady underline
+        ;;
+    bar_blink )
+        echo -e -n "\x1b[\x35 q" # changes to blinking bar
+        ;;
+    bar )
+        echo -e -n "\x1b[\x36 q" # changes to steady bar
+        ;;
+    * )
+        # do nothing
+        ;;
+esac
 
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31;warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -20,57 +38,18 @@ alias psme='ps alx | grep `id -u` '
 # set the pager, have it passthru ASCII color codes
 export PAGER="less -R"
 
-# Quickly mounts a device to a directory that may or may not yet exist
-# Arguments:
-#  1: device to mount
-#  2: Optional. Either an absolute path to mount to, or a subdirectory of /media/${USER}/.
-#     Empty will use  /media/${USER}/$(basename $device)
-#  3: Optionally any number of mount options and extra args can be specified that will be passed thru
-# Returns:
-#  Exit codes from commands on errors
-quickmount()
-{
-    if [ -u $1 ] ; then
-        echo "ERROR: no device specified"
-        return 1
-    fi
-
-    local device=$1
-    local path=$2
-    if [ -u $2 ] ; then
-        shift 1
-    else
-        shift 2
-    fi
-    local opts=$@
-
-    local MOUNTPT_NAME=/media/${USER}/$(basename ${device})
-    if [ -n "${path}" ] ; then
-        # starts with a slash (absolute path)?
-        if echo "${path}" | grep -q "^/" ; then
-            MOUNTPT_NAME=${path}
-        else
-            MOUNTPT_NAME=/media/${USER}/${path}
-        fi
-    fi
-
-
-    echo "Mounting to: ${MOUNTPT_NAME}"
-    sudo mkdir -p ${MOUNTPT_NAME}
-    local err=$?
-    if [ $err -ne 0 ] ; then
-        echo "Unable to create directory(ies) ${MOUNTPT_NAME}"
-        return $err
-    fi
-
-    sudo mount ${opts} ${device} ${MOUNTPT_NAME}
-    return $?
-}
-
 # enable color support of ls and also add handy aliases.  Also allow overriding default colors by
 # adding ~/.dircolors
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+if command -v dircolors &>/dev/null; then
+    if [ -r ~/.dircolors ]; then
+        # run the dircolors command on the file, which results in a bunch of commands we need to run
+        # as part of shell loading.
+        # If running it on our ~/.dircolors doesn't work, use the default
+        eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    fi
+
+    # use colors for everything if we have color support
+
     alias ls='ls --color=auto '
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
@@ -82,19 +61,22 @@ fi
 
 # Support fasd if it's installed
 if command -v fasd &>/dev/null ; then
+    fasd_command="$(command -v fasd)"
     if [ -n "${BASH}" ] ; then
-        fasd_cache="$HOME/.fasd-init-bash"
-        if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-            fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+        fasd_cache="${HOME}/.fasd-init-bash"
+        if [ "${fasd_command}" -nt "${fasd_cache}" -o ! -s "${fasd_cache}" ]; then
+            "${fasd_command}" --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
         fi
     else
-        fasd_cache="$HOME/.fasd-init-zsh"
-        if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-            fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install >| "$fasd_cache"
+        fasd_cache="${HOME}/.fasd-init-zsh"
+        if [ "${fasd_command}" -nt "${fasd_cache}" -o ! -s "${fasd_cache}" ]; then
+            "${fasd_command}" --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install >| "${fasd_cache}"
         fi
     fi
     source "$fasd_cache"
+    # don't leave these set in our global shell environment
     unset fasd_cache
+    unset fasd_command
 fi
 
 # VTE backend, which is used by gnome-shell and tilix, needs /etc/profile.d/vte.sh sourced
@@ -105,9 +87,9 @@ fi
 if ! type __vte_prompt_command &> /dev/null ; then
     # prefer properly named script without the version number in it, but fall back since Ubuntu
     # screwed the naming up by adding a version number to it.
-    if [ -e /etc/profile.d/vte.sh ] ; then
-        source /etc/profile.d/vte.sh
-    elif [ -e /etc/profile.d/vte-2.91.sh ] ; then
-        source /etc/profile.d/vte-2.91.sh
+    if [ -e "/etc/profile.d/vte.sh" ] ; then
+        source "/etc/profile.d/vte.sh"
+    elif [ -e "/etc/profile.d/vte-2.91.sh" ] ; then
+        source "/etc/profile.d/vte-2.91.sh"
     fi
 fi

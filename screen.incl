@@ -15,70 +15,96 @@
 #                         every login.  Useful when screen is the shell used by
 #                         a terminal but we aren't intending to keep things
 #                         around permanently.
+# Functions:
+# nowindow_mode_editor : (optional) function for setting editor variables to 
+#                        the proper non-windowed editor.
+# window_mode_editor : (optional) function for setting editor variables to the
+#                      proper GUI editor
 ############################################################################
-MY_X11_DISP_FILE="/home/$USER/.x11.DISPLAY.txt"
-MY_X11_AUTH_FILE="/home/$USER/.xauth.Xauth.txt"
+export MY_X11_DISP_FILE="${HOME}/.x11.DISPLAY.txt"
+export MY_X11_AUTH_FILE="${HOME}/.xauth.Xauth.txt"
+export SCREEN_LOGS_DIR="${HOME}/.screen_logs"
 
 # Function that checks if our display is being forwarded and sets the VISUAL variable
 # to a non-windowed version if it is, or a windowed version if it isn't
 # Not used, everything is forwarded (don't do this right now since it's being used
 # when ssh-ing on-site)
+# Globals:
+#  NO_WINDOW
+#  NO_REMOTE_WINDOW
+#  DISPLAY
 reset_visual_editor()
 {
-    if [ -n "$NO_WINDOW" ] ; then
-        nowindow_mode
-    elif [ -z "$NO_REMOTE_WINDOW" ] ; then
-        window_mode
+    if ! command -v nowindow_mode_editor &>/dev/null && \
+       ! command -v window_mode_editor &>/dev/null; then
+        # don't have the necessary functions, skip this
+        return 1
+    fi
+
+    if [ -n "${NO_WINDOW}" ] ; then
+        nowindow_mode_editor
+    elif [ -z "${NO_REMOTE_WINDOW}" ] ; then
+        window_mode_editor
     else #NO_REMOTE_WINDOW is set
         #check if we're a remote X11 forwarding session or not
-        LOCAL_DISP=`echo "$DISPLAY" | grep "localhost"` 
-        if [ -z "$LOCAL_DISP" ] ; then
+        if echo "${DISPLAY}" | grep -q "localhost"; then
             #Do everything with windows normally
-            window_mode
+            window_mode_editor
         else
             #do everything in no window mode by default
-            nowindow_mode
+            nowindow_mode_editor
         fi
      fi
 }
+export -f reset_visual_editor
 
 # Saves the DISPLAY and x11 authorizations to files so they can be retrieved after
 # entering a screen session.
+# Globals:
+#  DISPLAY
+#  MY_X11_DISP_FILE
+#  MY_X11_AUTH_FILE
 x11save()
 {
     # Remember the DISPLAY variable
-    echo "$DISPLAY" >&2
-    echo "$DISPLAY" > $MY_X11_DISP_FILE
-    chmod a+r $MY_X11_DISP_FILE
+    echo "${DISPLAY}" | tee "${MY_X11_DISP_FILE}" >&2
+    chmod a+r "${MY_X11_DISP_FILE}"
 
     # Remember our xauth cookie
 
     #DISPLAY format is "sometext:##.##" where "sometext" is optional and ##'s are any 1 or multi digit numbers
     #Get the ## from the DISPLAY immediately after the ':' but before the '.'
-    DISP_NUM=`echo "$DISPLAY" | awk 'BEGIN {FS=":"}; {print $2}' | awk 'BEGIN {FS="."}; {print $1}'`
-    if [ -n "$DISP_NUM" ] && [ $DISP_NUM != "0" ] ; then
-        xauth list | grep `echo :$DISP_NUM` >&2
-        xauth list | grep `echo :$DISP_NUM` > $MY_X11_AUTH_FILE
-        chmod a+r $MY_X11_AUTH_FILE
+    local disp_num=""
+    disp_num="$(echo "${DISPLAY}" | cut -d ':' -f2 | cut -d '.' -f1)"
+    if [ -n "${disp_num}" ] && [[ "${disp_num}" != "0" ]]; then
+        xauth list | grep -F ":${disp_num}" | tee "${MY_X11_AUTH_FILE}" >&2
+        chmod a+r "${MY_X11_AUTH_FILE}"
     else
         #clear the MY_X11_AUTH_FILE if we're on local display
-        echo "" > $MY_X11_AUTH_FILE
+        echo -n "" > "${MY_X11_AUTH_FILE}"
     fi
 
 }
+export -f x11save
 
 ## Loads the saved DISPLAY and x11 authorizations from x11save() so it can be set
 ## to forward graphics when connecting remotely, or to not forward graphics if not
 ## connecting remotely.  Also has the side effect of updating the VISUAL variable
 ## so the default is either windowed or non-windowed depending on the remote connection.
+# Global:
+#  SAVE_SCREEN_AUTH
+#  MY_X11_AUTH_FILE
+#  MY_X11_DISP_FILE
+#  DISPLAY
 x11load()
 {
-    if [ -n "$SAVE_SCREEN_AUTH" ] ; then
-        if [ -f $MY_X11_AUTH_FILE ] ; then
-            ADD=`cat $MY_X11_AUTH_FILE`
-            if [ ! -z "$ADD" ] ; then
-                echo `cat $MY_X11_AUTH_FILE`
-                xauth add `cat $MY_X11_AUTH_FILE`
+    local add
+    if [ -n "${SAVE_SCREEN_AUTH}" ] ; then
+        if [ -f "${MY_X11_AUTH_FILE}" ] ; then
+            add=$(cat "${MY_X11_AUTH_FILE}")
+            if [ -n "${add}" ] ; then
+                echo "${add}"
+                xauth add "${add}"
             else
                 echo "No saved xauth"
             fi
@@ -87,11 +113,11 @@ x11load()
         fi
     fi
 
-    if [ -f $MY_X11_DISP_FILE ] ; then
-        ADD=`cat $MY_X11_DISP_FILE`
-        if [ ! -z "$ADD" ] ; then
-            echo `cat $MY_X11_DISP_FILE`
-            export DISPLAY=`cat $MY_X11_DISP_FILE`
+    if [ -f "${MY_X11_DISP_FILE}" ] ; then
+        add=$(cat "${MY_X11_DISP_FILE}")
+        if [ -n "${add}" ] ; then
+            echo "${add}"
+            export DISPLAY="${add}"
         else
             echo "No saved DISPLAY"
         fi
@@ -101,6 +127,7 @@ x11load()
 
     reset_visual_editor
 }
+export -f x11load
 
 # When a single screen session is shared between two locations,
 # the display to use gets fought over.  x11load sets it to the
@@ -112,116 +139,162 @@ x11local()
 
     reset_visual_editor
 }
+export -f x11local
 
 ## Function to handle automatically saving the x11 setup when a calling screen
+# Args:
+#  1-*: (Optional) arguments to the screen command
 screen_remote()
 {
     # Hide the output from saving the screen setup
     x11save 1>&2
-    screen $@
+    screen "$@"
 }
+export -f screen_remote
 
 ## Funtion allowing a new screen to be created with a name that's 
 ## used both in the screen's title and as the "socket" name (the name
 ## people see when they do screen -ls)
+# Args:
+#  1: (optional) Name of new screen
+#  2-*: (optional) extra arguments to the screen creation
+# Globals:
+#  SCREEN_LOGS_DIR
 screen_new()
 {
-    NAME=
-
     #goto the location we want to store the screen logs
-    cd ~/screen_logs
+    mkdir -p "${SCREEN_LOGS_DIR}"
+    cd "${SCREEN_LOGS_DIR}" || return 1
 
-    if [ ! -u $1 ]; then
-        #pull the name off the arg list, but keep the rest of the args
-        NAME=$1
-        shift
-        screen -A -a -t $NAME -S $NAME $@   
+    local name="$1"
+    shift
+    local extra_args=("$@")
+
+    if [ -n "${name}" ]; then
+        screen -A -a -t "${name}" -S "${name}" "${extra_args[@]}"
     else
-        screen $@
+        screen
     fi
+    return $?
 }
+export -f screen_new
 
 # Force quites a named screen session
+# Arg:
+#  1: Name of screen session to quit
 screenkill()
 {
-    screen -X -S $1 quit
+    if [ $# -ne 1 ]; then
+        echo >&2 "Missing argument"
+        return 1
+    fi
+
+    screen -X -S "$1" quit
+    return $?
 }
+export -f screenkill
 
 # With our terminal programs opening screen sessions,
 # we quickly build up a bunch of detached screens.  Give
 # a quick way to wipe them all.
+# Return:
+#  0 on successfully killing all detached sessions
+#  1 if any session couldn't be killed
 screenwipe()
 {
-    local DEAD_SESSIONS=`screen -ls | grep "Detached" | awk '{print $1}'`
-    for S in $DEAD_SESSIONS ; do
-        screenkill $S
+    local dead_sessions=()
+    readarray -t dead_sessions < <(screen -ls | grep "Detached" | awk '{print $1}')
+    local all_ret=0
+    local ret=0
+    for S in "${dead_sessions[@]}" ; do
+        screenkill "$S"
+        ret=$?
+        if [ ${ret} -ne 0 ]; then
+            echo >&2 "Couldn't kill: $S"
+            all_ret=${ret}
+        fi
     done
+    return ${all_ret}
 }
+export -f screenwipe
 
 # This function parses the name of an attached or detached screen
 # passed to it, determines the timestamp, and gets the name of the
 # log file from it.
 # NOTE: This MUST match with the screenrc setting for the log file name
+# Args:
+#  1: Screen name to match
+#  2-*: (optional) Extra arguments to the tail command on the file
+# Output:
+#  stdout is log contents requested
+#  stderr for eveything else
+# Return:
+#  0 on log file found and printed
+#  1 if log file not found
 screentail()
 {
-    local NAME=$1
+    if [ $# -lt 1 ]; then
+        echo >&2 "Missing argument"
+        return 1
+    fi
+
+    local name="$1"
     shift
+    local extra_tail_opts=("$@")
 
     # If we gave part of an automatically assigned name, this will work,
-    # otherwise we either don't get a second line or get only spaces that
-    # tr removes.
+    # otherwise we either don't get a second line or get only spaces.
     # This doesn't work if the screen has a custom name though.
-    SESSION_NAME=`screen -ls ${NAME} | awk 'NR==2 {print $1}' | tr -d ' '`
-    if [ -z "${SESSION_NAME}" ] ; then
+    local session_name
+    session_name="$(screen -ls "${name}" | tail -n+2 | awk '{print $1}' | grep -E -v '^[ ]*$' | tail -n1)"
+    if [ -z "${session_name}" ] ; then
         # If we didn't get a match, just use the provided name and assume
         # it was a custom name
-        SESSION_NAME=$NAME
+        session_name="${name}"
     fi
 
     # This is highly dependent on the name given to the screen logs in
     # the screenrc.  We assume the name log file is named "/tmp/screenlog.*"
-    # and that it ends with ".$SESSION_NAME".
+    # and that it ends with ".${session_name}".
 
-    # the log file is /tmp/screenlog.*.$SESSION_NAME so find it
-    local SCREEN_LOG_FILE=`find /tmp -name "screenlog.*.${SESSION_NAME}" 2>/dev/null`
-    if [ -z "$SCREEN_LOG_FILE" ] ; then
-        echo "No matching log file found for name: $SESSION_NAME"
+    # the log file is /tmp/screenlog.*.${session_name} so find it
+    local screen_log_files=()
+    readarray -t screen_log_files < <(find /tmp -name "screenlog.*.${session_name}" 2>/dev/null)
+    if [ ${#screen_log_files[@]} -eq 0 ] ; then
+        echo >&2 "No matching log file found for name: ${session_name}"
         return 1
     else
+        # visual separators but not picked up if logs are being grepped
         echo >&2 "---------------------"
-        tail $@ $SCREEN_LOG_FILE
+        # allow grepping of stdout
+        tail "${extra_tail_opts[@]}" "${screen_log_files[@]}"
         echo >&2 "---------------------"
     fi
 }
+export -f screentail
 
-# Only if screen is installed
-if command -v screen &>/dev/null ; then
-    #alias screen="screen_remote"
-    alias sls="screen -ls "
+# Always run x11save on login so the details are updated for screen sessions to use,
+# allowing remoting 
+x11save
 
-    #Always run x11save on login so the details are updated for screen sessions to use
-    x11save
-
-    alias screenls='screen -ls '
-
-    # If WIPE_SCREENS_ON_START is set
-    if [ -n "${WIPE_SCREENS_ON_START}" ] ; then
-        # clear all detached screen sessions, hiding the output when we do
-        screen_wipe &>/dev/null
-    fi
-
-    #check if we're a remote X11 forwarding session or not
-    if echo "$DISPLAY" | grep -q "localhost" ; then
-        # automatically print the open screen sessions if we logged
-        # in with X11 forwarding
-        screen -ls
-    fi
-
-
-    # Set some shortcut aliases
-    alias s-ls="screenls "
-    alias s-wipe="screenwipe "
-    alias s-tail="screentail "
-    alias s-kill="screenkill "
-    alias s-x="screen -x -e^ee -S " #quick attach to running session with multi-view
+# If WIPE_SCREENS_ON_START is set
+if [ -n "${WIPE_SCREENS_ON_START}" ] ; then
+    # clear all detached screen sessions, hiding the output when we do
+    screen_wipe &>/dev/null
 fi
+
+#check if we're a remote X11 forwarding session or not
+if echo "${DISPLAY}" | grep -q "localhost" ; then
+    # automatically print the open screen sessions if we logged
+    # in with X11 forwarding
+    screen -ls
+fi
+
+# Set some shortcut aliases
+alias sls="screen -ls "
+alias screenls='screen -ls '
+alias s-ls="screenls "
+alias s-wipe="screenwipe "
+alias s-tail="screentail "
+alias s-kill="screenkill "
+alias s-x="screen -x -e^ee -S " #quick attach to running session with multi-view

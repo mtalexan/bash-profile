@@ -4,18 +4,24 @@
 
 
 ## Set the default user so prompts will know when you're running as a different user
-#export DEFAULT_USER="myself"
+export DEFAULT_USER="myself"
 
-## Path containin a bin folder with gtags in it, if it's not already in the PATH
+# Use emacs as the default editor (must be installed)
+#export USE_EMACS=true
+
+# Use gtags with emacs?
+#export USE_GTAGS=true
+## Path containing a bin folder with gtags in it, if it's not already in the PATH
 #export GTAGS_INSTALL_DIR=${HOME}/global-6.5.6
 
-## Force custom emacs daemon definitions. Conflicts with oh-my-zsh emacs package.
-## Auto-enabled for bash on Ubuntu
-#export EMACS_USE_DAEMON=true
+# Run every terminal in a 'screen' session so it can be grabbed from a remote
+# session too? (only works for x11)
+#export SUPPORT_REMOTE=true
 
-# Optionally use prezto instead of antigen
-export USE_PREZTO=true
-# be sure to run the prezto installer if you pick this option
+#################################################################################
+#  Prezto must be installed using the ${MY_TOOLS_DIR}/profile/install_prezto.sh
+#  if running zshell
+#################################################################################
 
 export MY_TOOLS_DIR=${HOME}/my-tools
 source ${MY_TOOLS_DIR}/all.incl

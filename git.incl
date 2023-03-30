@@ -6,7 +6,7 @@
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_EDITOR=emacs
 
-#some git aliases
+#some git aliases (all used with 'git ...')
 git config --global alias.unstage "reset HEAD --"
 git config --global alias.graph "log --oneline --decorate --graph"
 git config --global alias.co "checkout"
@@ -15,7 +15,7 @@ git config --global alias.bvv "branch -vv"
 git config --global alias.last "log -1 HEAD"
 git config --global alias.update "pull --no-rebase --ff --no-commit --ff-only"
 
-##### Git Aliases 
+##### shell Aliases for git commands
 alias gs='git status '
 alias gd='git diff '
 alias gdc='git diff --cached '
@@ -29,8 +29,8 @@ alias gcm='git commit '
 
 if [ -n "${BASH}" ] ; then
     ## Explicit completion commands required for the aliases above only in bash, zsh works automatically
-    if [ -f ${LOCAL_PROFILES_DIR}/git-completion.bash ]; then
-        source ${LOCAL_PROFILES_DIR}/git-completion.bash
+    if [ -f "${LOCAL_PROFILES_DIR}/git-completion.bash" ]; then
+        source "${LOCAL_PROFILES_DIR}/git-completion.bash"
         __git_complete gd _git_diff
         __git_complete gd _git_diff
         __git_complete glg _git_log
@@ -43,8 +43,8 @@ if [ -n "${BASH}" ] ; then
     fi
 
     if ! command -v __git_ps1 &>/dev/null ; then
-        if [ -f ${LOCAL_PROFILES_DIR}/git-prompt.sh ] ; then
-            source ${LOCAL_PROFILES_DIR}/git-prompt.sh
+        if [ -f "${LOCAL_PROFILES_DIR}/git-prompt.sh" ] ; then
+            source "${LOCAL_PROFILES_DIR}/git-prompt.sh"
         else
             #since it's part of the command prompt
             alias __git_ps1=' '
