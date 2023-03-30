@@ -27,7 +27,6 @@ nowindow_mode_editor()
     export EDITOR="emacs -nw"
     export VISUAL=
 }
-export -f nowindow_mode_editor
 
 window_mode_editor()
 {
@@ -37,7 +36,6 @@ window_mode_editor()
     export EDITOR="emacs"
     export VISUAL="emacs"
 }
-export -f window_mode_editor
 
 # check if X11 forwarding is setup with remote sessions
 if is_headless_session ; then

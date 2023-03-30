@@ -56,7 +56,6 @@ reset_visual_editor()
         fi
      fi
 }
-export -f reset_visual_editor
 
 # Saves the DISPLAY and x11 authorizations to files so they can be retrieved after
 # entering a screen session.
@@ -85,7 +84,6 @@ x11save()
     fi
 
 }
-export -f x11save
 
 ## Loads the saved DISPLAY and x11 authorizations from x11save() so it can be set
 ## to forward graphics when connecting remotely, or to not forward graphics if not
@@ -127,7 +125,6 @@ x11load()
 
     reset_visual_editor
 }
-export -f x11load
 
 # When a single screen session is shared between two locations,
 # the display to use gets fought over.  x11load sets it to the
@@ -139,7 +136,6 @@ x11local()
 
     reset_visual_editor
 }
-export -f x11local
 
 ## Function to handle automatically saving the x11 setup when a calling screen
 # Args:
@@ -150,7 +146,6 @@ screen_remote()
     x11save 1>&2
     screen "$@"
 }
-export -f screen_remote
 
 ## Funtion allowing a new screen to be created with a name that's 
 ## used both in the screen's title and as the "socket" name (the name
@@ -177,7 +172,6 @@ screen_new()
     fi
     return $?
 }
-export -f screen_new
 
 # Force quites a named screen session
 # Arg:
@@ -192,7 +186,6 @@ screenkill()
     screen -X -S "$1" quit
     return $?
 }
-export -f screenkill
 
 # With our terminal programs opening screen sessions,
 # we quickly build up a bunch of detached screens.  Give
@@ -216,7 +209,6 @@ screenwipe()
     done
     return ${all_ret}
 }
-export -f screenwipe
 
 # This function parses the name of an attached or detached screen
 # passed to it, determines the timestamp, and gets the name of the
@@ -271,7 +263,6 @@ screentail()
         echo >&2 "---------------------"
     fi
 }
-export -f screentail
 
 # Always run x11save on login so the details are updated for screen sessions to use,
 # allowing remoting 

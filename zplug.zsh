@@ -2,19 +2,18 @@ if ! command -v gawk &>/dev/null ; then
    echo >&2 "ERROR: need to install gawk for zplug to work without producing \"Unknown Error\" for each repo"
 else
     # zplug
-    export ZPLUG_HOME="${LOCAL_PROFILES_DIR}/tools/zplug-plugins"
-    source "${ZPLUG_HOME}/zplug/init.zsh"
+    export ZPLUG_HOME="${LOCAL_PROFILES_DIR}/tools/zplug"
+    source "${ZPLUG_HOME}/init.zsh"
 
     # let zplug manage itself
-    zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+    zplug 'zplug/zplug', from:github, hook-build:'zplug --self-manage'
 
-    # Grab binaries from GitHub Releases
-    # and rename with the "rename-to:" tag
-    zplug "junegunn/fzf-bin", \
-        from:gh-r, \
-        as:command, \
-        rename-to:fzf, \
-        use:"*amd64*"
+    # This not only doesn't work, it corrupts all other plugins by wiping out everything else.
+    ## Grab binaries from GitHub Releases
+    #zplug "junegunn/fzf", \
+    #    from:gh-r, \
+    #    as:command, \
+    #    use:"*linux_amd64*"
 
     # Support oh-my-zsh plugins and prezto plugins
     zplug "plugins/git",   from:oh-my-zsh
@@ -27,12 +26,12 @@ else
     zplug "Tarrasch/zsh-bd", from:"github", use:"bd.zsh"
 
     #up command
-    zplug "peterhurford/up.zsh"
+    zplug "peterhurford/up.zsh", from:"github"
 
     # content search in directory with fuzzy match
     #Key bound to Ctrl+f
     export FZF_DEFAULT_OPTS='--layout=default --bind="alt-bs:backward-kill-word,alt-j:backward-char,alt-l:forward-char,alt-i:up,alt-k:down,ctrl-j:backward-word,ctrl-l:forward-word,ctrl-i:page-up,ctrl-k:page-down,ctrl-g:cancel,alt-u:beginning-of-line,alt-o:end-of-line,ctrl-n:next-history,ctrl-p:previous-history,ctrl-]:jump,alt-space:toggle-in,ctrl-space:toggle-in" --multi'
-    zplug "seletskiy/zsh-fuzzy-search-and-edit"
+    zplug "seletskiy/zsh-fuzzy-search-and-edit", from:"github"
     zstyle ':fuzzy-search-and-edit:editor' use-visual yes
 
     # forgit, an interactive git plugin
@@ -40,7 +39,7 @@ else
     #zplug 'wfxr/forgit'
 
     #fzf-fasd, allows selection of tab completion of the "z" command
-    zplug "wookayin/fzf-fasd"
+    zplug "wookayin/fzf-fasd", from:"github"
 
     # zaw
     # history bound to Ctrl+r
@@ -48,7 +47,7 @@ else
     # git-log to Alt+g l
     # fasd to Alt+h
     # prompt for backend first is Ctrl+t
-    zplug "zsh-users/zaw"
+    zplug "zsh-users/zaw", from:"github"
     # keybindings, in the keys.incl, may fail the first time this plugin is installed
 
         # limit zaw to 5 lines

@@ -10,7 +10,6 @@ function _update_ps1() {
     POWERLINE_OPTIONS+=("-colorize-hostname")
     PS1="$(powerline-go-linux-amd64 -error "$?" "${POWERLINE_OPTIONS[@]}")"
 }
-export -f _update_ps1
 
 # add the local 'tools' subfolder to get the powerline-go-linux-amd64 command
 export PATH="${LOCAL_PROFILES_DIR}/tools:${PATH}"

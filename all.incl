@@ -60,7 +60,6 @@ else
             return 1
         fi
     }
-    export -f is_headless_session
 
     # This must be done first so prompts always use the right colors
     if uname -a | grep -iq "ubuntu" ; then

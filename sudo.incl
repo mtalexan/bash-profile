@@ -6,7 +6,7 @@
 if command -v nvim &>/dev/null; then
     export SUDOEDITOR="nvim"
 fi
-if false >/dev/null; then
+if false ; then
 #if command -v emacs &>/dev/null; then
     # If we don't do this, sudo will reset the PATH and it won't correctly
     # find emacs or some of the locally installed stuff.  Use \$PATH in this
