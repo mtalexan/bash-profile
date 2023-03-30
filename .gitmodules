@@ -1,4 +1,4 @@
 [submodule "zplug"]
 	path = tools/zplug
 	url = https://github.com/zplug/zplug.git
-	branch = 2.4.2
+	branch = master
