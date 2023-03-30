@@ -111,6 +111,7 @@ else
         # needs to come after the zsh manager (prezto, antigen, oh-my-zsh) and after bash completions
         source "${LOCAL_PROFILES_DIR}/zsh-completion-post.zsh"
         # adds navigation key bindings that override oh-my-zsh
+        # must be loaded last since some key bindings are for plugins
         source "${LOCAL_PROFILES_DIR}/keys.config"
     fi
 fi # end else of if -z $MY_TOOLS_DIR

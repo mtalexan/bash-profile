@@ -216,9 +216,11 @@ zstyle ':prezto:module:syntax-highlighting' highlighters \
   'main' \
   'brackets' \
   'pattern' \
-  'cursor' \
   'line' \
   'root'
+# 'cursor'
+# do NOT include 'cursor' here.  It makes block cursors disappear when moving over text
+
 
 # Set syntax highlighting styles. Changes from default green to blue
 #zstyle ':prezto:module:syntax-highlighting' styles \

@@ -73,4 +73,3 @@ replace_with_symlink "${HOME}/.config/copyq/copyq_tabs.ini" "copyq/copyq_tabs.in
 replace_with_symlink "${HOME}/.config/copyq/dunstrc" "dunstrc"
 
 replace_with_symlink "${HOME}/.pekwm" "pekwm"
-

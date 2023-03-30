@@ -26,9 +26,13 @@ export DEFAULT_USER="myself"
 export MY_TOOLS_DIR=${HOME}/my-tools
 source ${MY_TOOLS_DIR}/all.incl
 
-# Remove these lines entirely to be prompted for configuration of each part
-# of the prompt on startup, which will generate the config file and offer
-# to put these lines in for it. 
-#
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -e ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# load powerlevel10k prompt
+# if we throw any errors from this .zshrc with p10k active, it will go into config mode
+# automatically and hide the errors.
+if [[ -n "$(readlink -e "${HOME}/.p10k.zsh")" ]] && [[  -f "$(readlink -e "${HOME}/.p10k.zsh")" ]]; then
+  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+  source "${HOME}/.p10k.zsh"
+  # force block config mode, it should never error out, and any errors we do get aren't
+  # related to p10k
+  POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+fi
