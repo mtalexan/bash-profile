@@ -4,7 +4,6 @@
 #  LOCAL_PROFILES_DIR : The directory the profiles repo is cloned into
 
 export GIT_PS1_SHOWDIRTYSTATE=1
-export GIT_EDITOR=emacs
 
 #some git aliases (all used with 'git ...')
 git config --global alias.unstage "reset HEAD --"
