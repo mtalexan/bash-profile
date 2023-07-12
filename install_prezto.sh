@@ -38,6 +38,14 @@ if ! [ -e "${HOME}/.zprezto/modules/prompt/functions/prompt_garrett_setup" ] ; t
     fi
 fi
 
+# Add support or using starship, assuming starship is installed separately (i.e. `nix profile install 'nixpkgs#starship')
+if ! [ -e "${HOME}/.zprezto/modules/prompt/functions/prompt_starship_setup" ] ; then
+    if ! echo 'eval "$(starship init zsh)"' > ${HOME}/.zprezto/modules/prompt/functions/prompt_starship_setup ; then
+        echo "ERROR during creation of starship prompt setup script"
+        exit 1
+    fi
+fi
+
 # Copy the template if we don't have one already
 if [ -e "${HOME}/.zshrc" ] ; then
     echo "~/.zshrc already exists, skipping"
