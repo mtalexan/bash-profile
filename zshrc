@@ -2,6 +2,21 @@
 # This file is a template and should not be used directly.
 #####
 
+# needs to match the setting in zprestorc
+PROMPT_THEME=starship
+#PROMPT_THEME=p10k
+
+if [ "${PROMPT_THEME}" == "starship" ] ; then
+    # use starship
+    eval "$(starship init zsh)"
+elif [ "${PROMPT_THEME}" == "p10k" ] ; then
+    # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+    # Initialization code that may require console input (password prompts, [y/n]
+    # confirmations, etc.) must go above this block; everything else may go below.
+    if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+      source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    fi
+fi
 
 ## Set the default user so prompts will know when you're running as a different user
 export DEFAULT_USER="myself"
@@ -26,13 +41,15 @@ export DEFAULT_USER="myself"
 export MY_TOOLS_DIR=${HOME}/my-tools
 source ${MY_TOOLS_DIR}/all.incl
 
-# load powerlevel10k prompt
-# if we throw any errors from this .zshrc with p10k active, it will go into config mode
-# automatically and hide the errors.
-if [[ -n "$(readlink -e "${HOME}/.p10k.zsh")" ]] && [[  -f "$(readlink -e "${HOME}/.p10k.zsh")" ]]; then
-  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-  source "${HOME}/.p10k.zsh"
-  # force block config mode, it should never error out, and any errors we do get aren't
-  # related to p10k
-  POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+if [ "${PROMPT_THEME}" == "p10k" ] ; then
+    # load powerlevel10k prompt
+    # if we throw any errors from this .zshrc with p10k active, it will go into config mode
+    # automatically and hide the errors.
+    if [[ -n "$(readlink -e "${HOME}/.p10k.zsh")" ]] && [[  -f "$(readlink -e "${HOME}/.p10k.zsh")" ]]; then
+      # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+      source "${HOME}/.p10k.zsh"
+      # force block config mode, it should never error out, and any errors we do get aren't
+      # related to p10k
+      POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+    fi
 fi

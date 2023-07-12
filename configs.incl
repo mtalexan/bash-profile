@@ -42,6 +42,7 @@ replace_with_symlink()
 }
 
 replace_with_symlink "${HOME}/.config/terminator/config" "terminator"
+replace_with_symlink "${HOME}/.config/starship.toml" "starship.toml"
 replace_with_symlink "${HOME}/.config/awesome" "awesome"
 replace_with_symlink "${HOME}/.config/rofi" "rofi"
 replace_with_symlink "${HOME}/.config/polybar" "polybar"
